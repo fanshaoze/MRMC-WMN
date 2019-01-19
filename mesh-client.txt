@@ -1,0 +1,1 @@
+./Debug/main.c.o ./Debug/inform_get.c.o ./Debug/send.c.o ./Debug/receive.c.o ./Debug/util.c.o ./Debug/command.c.o
