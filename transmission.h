@@ -2,3 +2,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "meshclient.h"
+
+int send_neighbor(char * neigh_inform){
+    send(clientSocket, neigh_inform , strlen(neigh_inform), 0);
+    return 0;
+}

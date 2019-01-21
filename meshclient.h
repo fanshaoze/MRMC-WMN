@@ -3,8 +3,16 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#define init_channel "36"
+#define init_ssid "mesh"
+
+
+char node_id[50];
+
 struct radio_type{
     char mac_addr[100];
+    char channel[10];
+    char ssid[10];
     int neigh_count;
     struct node_neighbor * neighbors;
 };
@@ -25,13 +33,14 @@ struct command{
 
 int get_nodeid();
 int decode_command();
-int alloc_channel_ssid();
-int get_neighbor();
-int send_neighbor();
+int alloc_channel_ssid(struct radio_type radio);
+int get_neighbor(struct radio_type * radios);
+int send_neighbor(char * neigh_inform);
 int shutdown_net();
 char command_no();
 int get_freq(char * wlan);
-int get_nei_infor(struct radio_type radio);
+int get_nei_infor(char * result, struct radio_type radio);
 
 char *strrpc(char *str,char *oldstr,char *newstr);
-void radio_init(struct radio_type radio,int neighbor_num);
+void radio_init(struct radio_type radio);
+char * compose_neighbor(struct node_neighbor neighbor);

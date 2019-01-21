@@ -58,7 +58,7 @@ int main()
         //get the mac addr of radio0 as node ID
    		printf("\n");
     	send(clientSocket, sendbuf, strlen(sendbuf), 0);
-        struct radio_type * radios;
+        struct radio_type * radios = NULL;
         
    		if(strcmp(sendbuf, "quit") == 0)
     		break;
@@ -73,10 +73,10 @@ int main()
             case 'd':
                 break;
             case 'l':
-                alloc_channel_ssid();
+                break;
             case 'n':
                 get_neighbor(radios);
-                send_neighbor();
+                //send_neighbor();
             default:
                 printf("command error\n");
                 break;
