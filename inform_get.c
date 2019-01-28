@@ -7,7 +7,8 @@
 int get_nodeid(){
     return 0;
 }
-int get_neighbor(struct radio_type * radios){
+int radios_inform_init(struct radio_type * radios){
+    //enable_all_radios()
     char * words;
     char * wl = "";
     system("sh /home/fan/getradio.sh");
@@ -17,9 +18,12 @@ int get_neighbor(struct radio_type * radios){
     int freq;
     int g_radio_num = 0;
     int ac_radio_num = 0;
-    int i = 0;
+   // int i = 0;
+    int j = 0;
     //struct node_neighbor node;
-    
+    char radios_mac_addr[radio_max][50];
+    char radios_id[radio_max][20];
+    int radios_freq[radio_max];
     if((fp = fopen(filename,"r")) == NULL) //判断文件是否存在及可读
     { 
         printf("error!"); 
@@ -33,12 +37,16 @@ int get_neighbor(struct radio_type * radios){
         strncpy(wl,words,4);
         if (strcmp(wl, "wlan") == 0){
             freq = get_freq(wl);
+            strcpy(radios_mac_addr[j],words+4);
+            strcpy(radios_id[j],words);
             //如果是5G，获取邻居，否则continue
             if(freq == 5){
                 if (strcmp(words, "wlan0") == 0){
                     strcpy(node_id,words+4);
                 }
                 ac_radio_num += 1;
+                
+                
             }
             else if(freq == 2){//如果是2.4G
                 if (strcmp(words, "wlan0") == 0){
@@ -46,15 +54,27 @@ int get_neighbor(struct radio_type * radios){
                 }
                 g_radio_num += 1;
             }
+            radios_freq[j] = freq;
         }
         
         else continue;
-        
     }
     fclose(fp);  
-    radios = (struct radio_type*) malloc(ac_radio_num);
-    
-    for(i = 0;i<ac_radio_num;i++){
+    //radio_no = ac_radio_num;
+    radio_no = ac_radio_num+g_radio_num;
+    radios = (struct radio_type*) malloc(radio_no);
+    for(j = 0;j<radio_no;j++){
+        strcpy(radios[j].radio_id,radios_id[j]);
+        strcpy(radios[j].mac_addr,radios_mac_addr[j]);
+        radios[j].freq = radios_freq[j];
+    }
+    radio_init(radios);
+    return 0;
+}
+int get_neighbor(int clientSocket,struct radio_type * radios){
+    enable_all_radios(radios);
+    int i = 0;
+    for(i = 0;i<radio_no;i++){
         char neigh_send_inform[10000];
         char radio_result[1000];
         get_nei_infor(radio_result,radios[i]);
@@ -67,7 +87,7 @@ int get_neighbor(struct radio_type * radios){
         strcat(neigh_send_inform," ");
         strcat(neigh_send_inform, radio_result);
         strcat(neigh_send_inform, "\r\n");
-        send_neighbor(neigh_send_inform);
+        send_neighbor(clientSocket,neigh_send_inform);
         neigh_send_inform[0] = '\0';
         
     }
@@ -117,8 +137,8 @@ int get_freq(char * wlan){
 
 int get_nei_infor(char * result, struct radio_type radio){
     //struct node_neighbor nei_node[];
-    radio_init(radio);
-    alloc_channel_ssid(radio);
+    
+    //alloc_channel_ssid(radio);
     char filename[] = "neighbors"; //文件名
     char * orig_com = "sh /home/fan/shelltest.sh";
     FILE *fp; 
@@ -200,3 +220,12 @@ int get_nei_infor(char * result, struct radio_type radio){
     }
     return 0;
 }
+
+//int alloc_channel_ssid(struct radio_type *radios){
+    //uci set wireless.@wifi-device[0].channel=6    //设置无线信道为6  
+                //uci set wireless.@wifi-iface[0].mode=ap    //设置无线模式为ap  
+                //uci set wireless.@wifi-iface[0].ssid=[自己设置SSID]    //设置无线SSID 
+    
+    
+//}
+                

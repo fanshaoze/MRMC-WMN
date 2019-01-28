@@ -27,6 +27,10 @@ int main()
 	char sendbuf[200];
 	char recvbuf[200];
 	int iDataNum;
+    int com_no = 0;
+    radio_no = 0;
+    int i = 0;
+    
 	if((clientSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 	{
     	perror("socket");
@@ -49,7 +53,10 @@ int main()
    		printf("\n");
         get_nodeid();
     	send(clientSocket, sendbuf, strlen(sendbuf), 0);
-
+    
+    struct radio_type * radios = NULL;
+    radios_inform_init(radios);
+    
     while(1)
 
     {
@@ -58,8 +65,8 @@ int main()
         //get the mac addr of radio0 as node ID
    		printf("\n");
     	send(clientSocket, sendbuf, strlen(sendbuf), 0);
-        struct radio_type * radios = NULL;
         
+        radios_inform_init(radios);
    		if(strcmp(sendbuf, "quit") == 0)
     		break;
     	printf("读取消息:");
@@ -67,16 +74,26 @@ int main()
     	iDataNum = recv(clientSocket, recvbuf, 200, 0);
     	recvbuf[iDataNum] = '\0';
     	printf("%s\n", recvbuf);
-        decode_command();
-        char com_no = command_no();
+        com_no = decode_command(recvbuf);
+        //char com_no = command_no();
         switch (com_no){
-            case 'd':
-                break;
-            case 'l':
-                break;
-            case 'n':
-                get_neighbor(radios);
-                //send_neighbor();
+            case 1:
+            for(i = 0;i<radio_no;i++){
+                radio_disable(radios[i]);
+            }
+                //break;
+            case 2:
+                get_channel_ssid(radios,recvbuf);
+                for(i = 0;i<radio_no;i++){
+                    alloc_channel_ssid(radios[i]);
+                }
+                
+                //uci set wireless.@wifi-device[0].channel=6    //设置无线信道为6  
+                //uci set wireless.@wifi-iface[0].mode=ap    //设置无线模式为ap  
+                //uci set wireless.@wifi-iface[0].ssid=[自己设置SSID]    //设置无线SSID 
+                //break;
+            case 3:
+                get_neighbor(clientSocket,radios);
             default:
                 printf("command error\n");
                 break;
