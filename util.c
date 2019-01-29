@@ -18,10 +18,24 @@ int shutdown_net(){
 void radio_init(struct radio_type * radios){
     int i = 0;
     for (i = 0;i<radio_no;i++){
-        strcpy(radios[i].channel,init_channel);
-        strcpy(radios[i].ssid,init_ssid);
+        if(radios[i].freq == 5){
+            strcpy(radios[i].channel,init_channel_5G);
+            strcpy(radios[i].ssid,init_ssid_5G);
+        }
+        else if(radios[i].freq == 2){
+            strcpy(radios[i].channel,init_channel_2G);
+            strcpy(radios[i].ssid,init_ssid_2G); 
+        }
     }
 }
+
+int confirm_wireless(){
+    system("uci commit wireless");
+    system("/etc/init.d/network restart");
+    return 0;
+}
+
+
 int alloc_channel_ssid(struct radio_type radio){
     char set_channel[100];
     char set_ssid[100];
@@ -32,10 +46,32 @@ int alloc_channel_ssid(struct radio_type radio){
     sprintf(set_ssid,"%s%s%s%s","uci set wireless.@wifi-device[",no_in_wlan+1,"].ssid=",radio.ssid);
     system(set_channel);
     system(set_ssid);
-    system("uci commit wireless");
-    system("/etc/init.d/network restart");
+    //system("uci commit wireless");
+    //system("/etc/init.d/network restart");
     return 0;
 }
+
+
+int alloc_channel_ssid_all(struct radio_type * radios){
+    char set_channel[100];
+    char set_ssid[100];
+    char * no_in_wlan;
+    int i = 0;
+    for(i = 0;i<radio_no;i++){
+        no_in_wlan = strtok(radios[i].radio_id,"n");
+        //no_in_wlan.substr(4,strlen(radio.radio_id));
+        sprintf(set_channel,"%s%s%s%s","uci set wireless.@wifi-device[",no_in_wlan+1,"].channel=",radios[i].channel);
+        sprintf(set_ssid,"%s%s%s%s","uci set wireless.@wifi-device[",no_in_wlan+1,"].ssid=",radios[i].ssid);
+        system(set_channel);
+        system(set_ssid);
+    }
+    confirm_wireless();
+    return 0;
+}
+
+
+
+
 char *strrpc(char *str,char *oldstr,char *newstr){
     char bstr[strlen(str)];//转换缓冲区
     memset(bstr,0,sizeof(bstr));
@@ -83,6 +119,20 @@ int radio_disable(struct radio_type radio){
     return 0;
 }
 
+int radio_disable_all(struct radio_type * radios){
+    char set_disabled[100];
+    char * no_in_wlan;
+    int i = 0;
+    for(i = 0;i<radio_no;i++){
+        no_in_wlan = strtok(radios[i].radio_id,"n");
+        //no_in_wlan.substr(4,strlen(radio.radio_id));
+        sprintf(set_disabled,"%s%s%s","uci set wireless.@wifi-device[",no_in_wlan+1,"].disabled=1");
+        system(set_disabled);
+    }
+    confirm_wireless();
+    return 0;
+}
+
 int enable_all_radios(struct radio_type * radios){
     int i = 0;
     char set_enabled[100];
@@ -93,7 +143,6 @@ int enable_all_radios(struct radio_type * radios){
         system(set_enabled);
         //system(set_ssid);
     }
-    system("uci commit wireless");
-    system("/etc/init.d/network restart");
+    confirm_wireless();
     return 0;
 }

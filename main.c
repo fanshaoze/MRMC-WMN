@@ -38,8 +38,9 @@ int main()
 	}
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(SERVER_PORT);
-    //指定服务器端的ip，本地测试：127.0.0.1
+    //指定服务器端的ip，本地测试：192.168.1.152
     //inet_addr()函数，将点分十进制IP转换成网络字节序IP
+    //serverAddr.sin_addr.s_addr = inet_addr("192.168.1.152");
     serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
     if(connect(clientSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
     {
@@ -48,46 +49,51 @@ int main()
     }
     printf("连接到主机...\n");
         	printf("发送消息:");
-    	scanf("%s", sendbuf);
-        //get the mac addr of radio0 as node ID
+    	//scanf("%s", sendbuf);
    		printf("\n");
-        get_nodeid();
-    	send(clientSocket, sendbuf, strlen(sendbuf), 0);
+        //获取radio0的地址作为node_id
+        //get_nodeid();
+    	//send(clientSocket, sendbuf, strlen(sendbuf), 0);
     
     struct radio_type * radios = NULL;
+    //通过扫描，获取所有radio的信息，存储在radios的数组中
     radios_inform_init(radios);
     
     while(1)
 
     {
     	printf("发送消息:");
-    	scanf("%s", sendbuf);
+    	//标识start
+        scanf("%s", sendbuf);
         //get the mac addr of radio0 as node ID
-   		printf("\n");
+   		//printf("\n");
     	send(clientSocket, sendbuf, strlen(sendbuf), 0);
         
-        radios_inform_init(radios);
+        //radios_inform_init(radios);
    		if(strcmp(sendbuf, "quit") == 0)
     		break;
     	printf("读取消息:");
     	recvbuf[0] = '\0';
     	iDataNum = recv(clientSocket, recvbuf, 200, 0);
+        //从服务器端接收命令
     	recvbuf[iDataNum] = '\0';
     	printf("%s\n", recvbuf);
+        //解析命令，将命令和标识相对应，
         com_no = decode_command(recvbuf);
         //char com_no = command_no();
         switch (com_no){
             case 1:
-            for(i = 0;i<radio_no;i++){
-                radio_disable(radios[i]);
-            }
+                for(i = 0;i<radio_no;i++){
+                    //关闭所有的射频
+                    radio_disable_all(radios);
+                }
                 //break;
             case 2:
-                get_channel_ssid(radios,recvbuf);
+                get_channel_ssid(radios,recvbuf);//获取命令中每个射频分配的channel和ssid
                 for(i = 0;i<radio_no;i++){
                     alloc_channel_ssid(radios[i]);
                 }
-                
+                confirm_wireless();
                 //uci set wireless.@wifi-device[0].channel=6    //设置无线信道为6  
                 //uci set wireless.@wifi-iface[0].mode=ap    //设置无线模式为ap  
                 //uci set wireless.@wifi-iface[0].ssid=[自己设置SSID]    //设置无线SSID 

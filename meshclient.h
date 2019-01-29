@@ -12,9 +12,10 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-
-#define init_channel "36"
-#define init_ssid "mesh"
+#define init_channel_2G "11"
+#define init_ssid_2G "mesh0"
+#define init_channel_5G "36"
+#define init_ssid_5G "mesh1"
 #define radio_max 10
 
 char node_id[50];
@@ -54,9 +55,11 @@ int get_freq(char * wlan);
 int get_nei_infor(char * result, struct radio_type radio);
 int get_channel_ssid(struct radio_type * radios,char * recv_commmand);
 int radio_disable(struct radio_type radio);
+int radio_disable_all(struct radio_type * radios);
 int enable_all_radios(struct radio_type * radios);
 int radios_inform_init(struct radio_type * radios);
 
 char *strrpc(char *str,char *oldstr,char *newstr);
 void radio_init(struct radio_type * radios);
 char * compose_neighbor(struct node_neighbor neighbor);
+int confirm_wireless();
