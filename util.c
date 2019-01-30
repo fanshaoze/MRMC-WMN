@@ -41,9 +41,10 @@ int alloc_channel_ssid(struct radio_type radio){
     char set_ssid[100];
     char * no_in_wlan;
     no_in_wlan = strtok(radio.radio_id,"n");
+    no_in_wlan = strtok(NULL,"n");
     //no_in_wlan.substr(4,strlen(radio.radio_id));
-    sprintf(set_channel,"%s%s%s%s","uci set wireless.@wifi-device[",no_in_wlan+1,"].channel=",radio.channel);
-    sprintf(set_ssid,"%s%s%s%s","uci set wireless.@wifi-device[",no_in_wlan+1,"].ssid=",radio.ssid);
+    sprintf(set_channel,"%s%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].channel=",radio.channel);
+    sprintf(set_ssid,"%s%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].ssid=",radio.ssid);
     system(set_channel);
     system(set_ssid);
     //system("uci commit wireless");
@@ -59,11 +60,13 @@ int alloc_channel_ssid_all(struct radio_type * radios){
     int i = 0;
     for(i = 0;i<radio_no;i++){
         no_in_wlan = strtok(radios[i].radio_id,"n");
+        no_in_wlan = strtok(NULL,"n");
         //no_in_wlan.substr(4,strlen(radio.radio_id));
-        sprintf(set_channel,"%s%s%s%s","uci set wireless.@wifi-device[",no_in_wlan+1,"].channel=",radios[i].channel);
-        sprintf(set_ssid,"%s%s%s%s","uci set wireless.@wifi-device[",no_in_wlan+1,"].ssid=",radios[i].ssid);
+        sprintf(set_channel,"%s%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].channel=",radios[i].channel);
+        sprintf(set_ssid,"%s%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].ssid=",radios[i].ssid);
         system(set_channel);
         system(set_ssid);
+        no_in_wlan=NULL;
     }
     confirm_wireless();
     return 0;
@@ -111,11 +114,13 @@ int radio_disable(struct radio_type radio){
     char set_disabled[100];
     char * no_in_wlan;
     no_in_wlan = strtok(radio.radio_id,"n");
-    sprintf(set_disabled,"%s%s%s","uci set wireless.@wifi-device[",no_in_wlan+1,"].disabled=1");
-    system(set_disabled);
+    no_in_wlan = strtok(NULL,"n");
+    sprintf(set_disabled,"%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].disabled=1");
+    printf("%s\n",set_disabled);
+    //system(set_disabled);
     //system(set_ssid);
-    system("uci commit wireless");
-    system("/etc/init.d/network restart");
+    //system("uci commit wireless");
+    //system("/etc/init.d/network restart");
     return 0;
 }
 
@@ -126,7 +131,8 @@ int radio_disable_all(struct radio_type * radios){
     for(i = 0;i<radio_no;i++){
         no_in_wlan = strtok(radios[i].radio_id,"n");
         //no_in_wlan.substr(4,strlen(radio.radio_id));
-        sprintf(set_disabled,"%s%s%s","uci set wireless.@wifi-device[",no_in_wlan+1,"].disabled=1");
+        no_in_wlan = strtok(NULL,"n");
+        sprintf(set_disabled,"%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].disabled=1");
         system(set_disabled);
     }
     confirm_wireless();
@@ -135,14 +141,31 @@ int radio_disable_all(struct radio_type * radios){
 
 int enable_all_radios(struct radio_type * radios){
     int i = 0;
-    char set_enabled[100];
-    char * no_in_wlan;
+    char set_enabled[1000];
+    
+    //strcpy(no_in_wlan,radios[i].radio_id)
     for(i = 0;i<radio_no;i++){
-        no_in_wlan = strtok(radios[i].radio_id,"n");
-        sprintf(set_enabled,"%s%s%s","uci set wireless.@wifi-device[",no_in_wlan+1,"].disabled=0");
-        system(set_enabled);
+        char no_in_wlan[10];
+        strcpy(no_in_wlan,radios[i].radio_id);
+        no_in_wlan[strlen(radios[i].radio_id)] = '\0';
+        char * no_str = strtok(no_in_wlan,"n");
+        //no_in_wlan = strtok(radios[i].radio_id,"n");
+        //printf("no0,%s\n",no_in_wlan);
+       no_str = strtok(NULL,"n");
+        printf("no1,%s\n",no_str);
+        sprintf(set_enabled,"%s%s%s","uci set wireless.@wifi-device[",no_str,"].disabled=0");
+        printf("set_enabled %s\n",set_enabled);
+        //system(set_enabled);
         //system(set_ssid);
     }
-    confirm_wireless();
+    //***********confirm_wireless();
     return 0;
+}
+
+char * tok_forward(char* words, int index,char * signal){
+    int i = 0;
+    for(i = 0;i<index;i++){
+        words = strtok(NULL,signal);
+    }
+    return words;
 }

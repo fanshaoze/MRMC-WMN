@@ -20,19 +20,24 @@
 */
 int main()
 {
-	//客户端只需要一个套接字文件描述符，用于和服务器通信
+
+    int com_no = 0;
+    radio_no = 2;
+    int i = 0;
+    struct radio_type * radios = NULL;
+    //通过扫描，获取所有radio的信息，存储在radios的数组中
+    radios = radios_inform_init(radios);
+
+
+    char sendbuf[200];
+	char recvbuf[200];
+/*
+//客户端只需要一个套接字文件描述符，用于和服务器通信
 	int clientSocket;
 	//描述服务器的socket
 	struct sockaddr_in serverAddr;
-	char sendbuf[200];
-	char recvbuf[200];
-	int iDataNum;
-    int com_no = 0;
-    radio_no = 0;
-    int i = 0;
-    
-	if((clientSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-	{
+	int iDataNum = 0;
+    if((clientSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0){
     	perror("socket");
     	return 1;
 	}
@@ -42,33 +47,28 @@ int main()
     //inet_addr()函数，将点分十进制IP转换成网络字节序IP
     //serverAddr.sin_addr.s_addr = inet_addr("192.168.1.152");
     serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    if(connect(clientSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
-    {
+    if(connect(clientSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0){
     	perror("connect");
     	return 1;
     }
     printf("连接到主机...\n");
-        	printf("发送消息:");
-    	//scanf("%s", sendbuf);
-   		printf("\n");
-        //获取radio0的地址作为node_id
-        //get_nodeid();
-    	//send(clientSocket, sendbuf, strlen(sendbuf), 0);
-    
-    struct radio_type * radios = NULL;
-    //通过扫描，获取所有radio的信息，存储在radios的数组中
-    radios_inform_init(radios);
-    
+    printf("发送消息:");
+    //scanf("%s", sendbuf);
+    strcpy(sendbuf,"123");
+    printf("\n");
+    send(clientSocket, sendbuf, strlen(sendbuf), 0);
+*/
     while(1)
 
     {
-    	printf("发送消息:");
+/*
+    	//printf("发送消息:");
     	//标识start
-        scanf("%s", sendbuf);
+        //scanf("%s", sendbuf);
         //get the mac addr of radio0 as node ID
    		//printf("\n");
-    	send(clientSocket, sendbuf, strlen(sendbuf), 0);
-        
+    	//send(clientSocket, sendbuf, strlen(sendbuf), 0);
+
         //radios_inform_init(radios);
    		if(strcmp(sendbuf, "quit") == 0)
     		break;
@@ -77,35 +77,41 @@ int main()
     	iDataNum = recv(clientSocket, recvbuf, 200, 0);
         //从服务器端接收命令
     	recvbuf[iDataNum] = '\0';
-    	printf("%s\n", recvbuf);
+*/
+        //begin
+        strcpy(recvbuf,"DISCOVER");
+        printf("%s\n", recvbuf);
+        recvbuf[strlen("DISCOVER")] = '\0';
+        printf("%s\n", recvbuf);
+        //end
         //解析命令，将命令和标识相对应，
         com_no = decode_command(recvbuf);
         //char com_no = command_no();
+        printf("com no %d,\n",com_no);
         switch (com_no){
             case 1:
                 for(i = 0;i<radio_no;i++){
                     //关闭所有的射频
                     radio_disable_all(radios);
                 }
-                //break;
+                 //break;
             case 2:
                 get_channel_ssid(radios,recvbuf);//获取命令中每个射频分配的channel和ssid
                 for(i = 0;i<radio_no;i++){
                     alloc_channel_ssid(radios[i]);
                 }
-                confirm_wireless();
-                //uci set wireless.@wifi-device[0].channel=6    //设置无线信道为6  
-                //uci set wireless.@wifi-iface[0].mode=ap    //设置无线模式为ap  
-                //uci set wireless.@wifi-iface[0].ssid=[自己设置SSID]    //设置无线SSID 
-                //break;
+                //&&&&&&&confirm_wireless();
             case 3:
-                get_neighbor(clientSocket,radios);
+                printf("here");
+                get_neighbor(1,radios);
+                //&&&&&get_neighbor(clientSocket,radios);
             default:
                 printf("command error\n");
                 break;
         }
     }
-    shutdown_net();
-    close(clientSocket);
+    //shutdown_net();
+    //close(clientSocket);
+
     return 0;
  }
