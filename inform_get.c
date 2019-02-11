@@ -207,6 +207,7 @@ void radios_inform_init2(struct radio_type * radios){
         //printf("radio_id %s\n",radios_id[j]);
         strcpy(radios[j].mac_addr,radios_mac_addr[j]);
         radios[j].freq = radios_freq[j];
+		radios[j].mac_addr[strlen(radios[j].mac_addr)-1] = '\0';
         //printf("freq,%d,%d\n",j,freq);
     }
 	//放在主函数里面调用试试
@@ -242,18 +243,25 @@ int get_neighbor(int clientSocket,struct radio_type * radios){
         neigh_send_inform[0] = '\0';
         radio_result[0] = '\0';
         strcpy(radio_result, get_nei_infor(radio_result,radios[i]));
-        strcat(neigh_send_inform,"NEIGHBOR ");
-        
-        strcat(neigh_send_inform,node_id);
+        sprintf(neigh_send_inform,"%s%s",neigh_send_inform,"NEIGHBOR ");
+		//strcat(neigh_send_inform,"NEIGHBOR ");
+        sprintf(neigh_send_inform,"%s%s",neigh_send_inform,node_id);
+        //strcat(neigh_send_inform,node_id);
         printf("node_id %s\n",node_id);
-        strcat(neigh_send_inform," ");
-        strcat(neigh_send_inform,radios[i].mac_addr);
+        sprintf(neigh_send_inform,"%s%s",neigh_send_inform," ");
+		//strcat(neigh_send_inform," ");
+		sprintf(neigh_send_inform,"%s%s",neigh_send_inform,radios[i].mac_addr);
+        //strcat(neigh_send_inform,radios[i].mac_addr);
         printf("mac_addr %s\n",radios[i].mac_addr);
-        strcat(neigh_send_inform,radios[i].channel);
+        sprintf(neigh_send_inform,"%s%s",neigh_send_inform," ");
+		//strcat(neigh_send_inform," ");
+		sprintf(neigh_send_inform,"%s%s",neigh_send_inform,radios[i].channel);
+		//strcat(neigh_send_inform,radios[i].channel);
         printf("channel %s\n",radios[i].channel);
-        strcat(neigh_send_inform," ");
-        strcat(neigh_send_inform," ");
-        strcat(neigh_send_inform, radio_result);
+		sprintf(neigh_send_inform,"%s%s",neigh_send_inform," ");
+        //strcat(neigh_send_inform," ");
+        sprintf(neigh_send_inform,"%s%s",neigh_send_inform,radio_result);
+        //strcat(neigh_send_inform, radio_result);
         printf("nei %s\n",radio_result);
         strcat(neigh_send_inform, "\r\n");
         printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
