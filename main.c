@@ -22,13 +22,14 @@ int main()
 {
 
     int com_no = 0;
-    radio_no = 2;
+    
     int i = 0;
     struct radio_type * radios = NULL;
     //通过扫描，获取所有radio的信息，存储在radios的数组中
-    radios = radios_inform_init(radios);
-
-
+    radios_inform_init();
+	radio_no = 2;
+	radios = (struct radio_type*) malloc(sizeof(struct radio_type)*radio_no);
+	radios_inform_init2(radios);
     char sendbuf[200];
 	char recvbuf[200];
 /*
@@ -105,10 +106,13 @@ int main()
                 printf("here");
                 get_neighbor(1,radios);
                 //&&&&&get_neighbor(clientSocket,radios);
+				break;
+				//printf("stop\n");
             default:
                 printf("command error\n");
                 break;
         }
+		break;
     }
     //shutdown_net();
     //close(clientSocket);

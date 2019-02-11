@@ -94,20 +94,24 @@ char *strrpc(char *str,char *oldstr,char *newstr){
 
 char * compose_neighbor(struct node_neighbor neighbor){
     neighbor.noise = -95;
-    char rx[10];
-    char tx[10];
+    char rx[20];
+    char tx[20];
     char signal[10];
     char noise[10];
     sprintf(rx, "%f", neighbor.rx_rate);
     sprintf(tx, "%f", neighbor.tx_rate);
     sprintf(signal, "%d", neighbor.signal);
     sprintf(noise, "%d", neighbor.noise);
+	printf("%s,rx\n",rx);
+	printf("%s,tx\n",tx);
+	printf("%s,signal\n",signal);
+	printf("%s,noise\n",noise);
+	printf("%s,macaddr\n",neighbor.mac_addr);
     char * nei_inform;
-    nei_inform = (char *)malloc(strlen(neighbor.mac_addr)+1+strlen(signal)+1+strlen(noise)+1+strlen(tx) \
-    +1+strlen(neighbor.tx_qam)+1+strlen(rx)+1+strlen(neighbor.rx_qam));
-    sprintf(nei_inform,"%s%s%s%s%s%s%s%s%s%s%s%s%s",neighbor.mac_addr,"#",signal,"#",noise,"#",tx \
-    ,"#",neighbor.tx_qam,"#",tx,"#",neighbor.tx_qam);
-    return nei_inform;
+    nei_inform = (char *)malloc(strlen(neighbor.mac_addr)+1+strlen(signal)+1+strlen(noise)+1+strlen(tx) +1+strlen(neighbor.tx_qam)+1+strlen(rx)+1+strlen(neighbor.rx_qam));
+	sprintf(nei_inform,"%s%s%s%s%s%s%s%s%s%s%s%s%s",neighbor.mac_addr,"#",signal,"#",noise,"#",tx,"#",neighbor.tx_qam,"#",rx,"#",neighbor.rx_qam);
+    printf("nei_inform %s\n",nei_inform);
+	return nei_inform;
 }
 
 int radio_disable(struct radio_type radio){

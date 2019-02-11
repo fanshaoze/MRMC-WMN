@@ -24,7 +24,7 @@ int radio_no;
 
 struct radio_type{
     char radio_id[10];
-    char mac_addr[100];
+    char mac_addr[50];
     char channel[10];
     char ssid[10];
     int neigh_count;
@@ -33,7 +33,7 @@ struct radio_type{
 };
 
 struct node_neighbor{
-    char mac_addr[100];
+    char mac_addr[50];
     int signal;
     int noise;
     float rx_rate;
@@ -53,12 +53,13 @@ int get_neighbor(int clientSocket,struct radio_type * radios);
 int send_neighbor(int clientSocket, char * neigh_inform);
 int shutdown_net();
 int get_freq(char * wlan);
-int get_nei_infor(char * result, struct radio_type radio);
+char * get_nei_infor(char * result, struct radio_type radio);
 int get_channel_ssid(struct radio_type * radios,char * recv_commmand);
 int radio_disable(struct radio_type radio);
 int radio_disable_all(struct radio_type * radios);
 int enable_all_radios(struct radio_type * radios);
-struct radio_type * radios_inform_init(struct radio_type * radios);
+int radios_inform_init();
+void radios_inform_init2(struct radio_type * radios);
 
 char *strrpc(char *str,char *oldstr,char *newstr);
 void radio_init(struct radio_type * radios);
