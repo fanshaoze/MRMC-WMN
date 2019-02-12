@@ -62,22 +62,25 @@ int radios_inform_init(){
 
             freq = get_freq(radios_id[j]);//根据该行是wlan*来获取可用的信道数量，进而判断是2.4还是5
             printf("radios_mac_addr[j],%d,%s\n",j,radios_mac_addr[j]);
-            char hdaddr[hdaddr_len];
-            strcpy(hdaddr,radios_mac_addr[j]);
-            hdaddr[strlen(radios_mac_addr[j])-1] = '\0';
-            strcpy(radios_mac_addr[j],hdaddr);
+            //char hdaddr[hdaddr_len];
+           // strcpy(hdaddr,radios_mac_addr[j]);
+           // hdaddr[strlen(radios_mac_addr[j])-1] = '\0';
+            //strcpy(radios_mac_addr[j],hdaddr);
+            radios_mac_addr[j][strlen(radios_mac_addr[j])-2] = '\0';
             //printf("radios_mac_addr[j],%s\n",radios_mac_addr[j]);
             //printf("radios_id[j],%s\n",radios_id[j]);
             //计算5G和2.4G的数量，这里以后可能会用于区分5G和2.4G，以后只用5G组网时使用
             if(freq == 5){
                 if (strcmp(radios_id[j], "wlan0") == 0){
                     strcpy(node_id,radios_mac_addr[j]);//默认使用wlan0的地址作为node_id
+                    //node_id[strlen(node_id)-1] = '\0';
                 }
                 ac_radio_num += 1;
             }
             else if(freq == 2){//如果是2.4G
                 if (strcmp(radios_id[j], "wlan0") == 0){
                     strcpy(node_id,radios_mac_addr[j]);
+                    //node_id[strlen(node_id)-1] = '\0';
                 }
                 g_radio_num += 1;
             }
@@ -169,16 +172,17 @@ void radios_inform_init2(struct radio_type * radios){
 
             freq = get_freq(radios_id[j]);//根据该行是wlan*来获取可用的信道数量，进而判断是2.4还是5
             printf("radios_mac_addr[j],%d,%s\n",j,radios_mac_addr[j]);
-            char hdaddr[hdaddr_len];
-            strcpy(hdaddr,radios_mac_addr[j]);
-            hdaddr[strlen(radios_mac_addr[j])-1] = '\0';
-            strcpy(radios_mac_addr[j],hdaddr);
+            //char hdaddr[hdaddr_len];
+            //strcpy(hdaddr,radios_mac_addr[j]);
+            radios_mac_addr[j][strlen(radios_mac_addr[j])-2] = '\0';
+            //strcpy(radios_mac_addr[j],hdaddr);
             //printf("radios_mac_addr[j],%s\n",radios_mac_addr[j]);
             //printf("radios_id[j],%s\n",radios_id[j]);
+            
             //计算5G和2.4G的数量，这里以后可能会用于区分5G和2.4G，以后只用5G组网时使用
-            if(freq == 5){
+            /*if(freq == 5){
                 if (strcmp(radios_id[j], "wlan0") == 0){
-                    strcpy(node_id,radios_mac_addr[j]);//默认使用wlan0的地址作为node_id
+                    //strcpy(node_id,radios_mac_addr[j]);//默认使用wlan0的地址作为node_id
                 }
                 ac_radio_num += 1;
             }
@@ -187,7 +191,7 @@ void radios_inform_init2(struct radio_type * radios){
                     strcpy(node_id,radios_mac_addr[j]);
                 }
                 g_radio_num += 1;
-            }
+            }*/
             radios_freq[j] = freq;//存储频段信息到数据中，
             //printf("^^^^^^^^^^^^^^^^node_id,%s\n",node_id);
            // printf("^^^^^^^^^^^^^^^^radios_freq[j],%d\n",radios_freq[j]);
@@ -198,7 +202,7 @@ void radios_inform_init2(struct radio_type * radios){
     }
     fclose(fp);
     //radio_no = ac_radio_num;
-    radio_no = ac_radio_num+g_radio_num;
+    //radio_no = ac_radio_num+g_radio_num;
     //为radios分配空间
     //radios = (struct radio_type*) malloc(radio_no);
     //按顺序为每个radio赋值
@@ -206,6 +210,7 @@ void radios_inform_init2(struct radio_type * radios){
         strcpy(radios[j].radio_id,radios_id[j]);
         //printf("radio_id %s\n",radios_id[j]);
         strcpy(radios[j].mac_addr,radios_mac_addr[j]);
+        //radios[j].mac_addr[strlen(radios[j].mac_addr)-2] = '\0';
         radios[j].freq = radios_freq[j];
         //printf("freq,%d,%d\n",j,freq);
     }
@@ -246,20 +251,28 @@ int get_neighbor(int clientSocket,struct radio_type * radios){
         
         strcat(neigh_send_inform,node_id);
         printf("node_id %s\n",node_id);
+        printf("neigh_send_inform,node_id %s\n",neigh_send_inform);
         strcat(neigh_send_inform," ");
         strcat(neigh_send_inform,radios[i].mac_addr);
+        printf("neigh_send_inform,mac %s\n",neigh_send_inform);
         printf("mac_addr %s\n",radios[i].mac_addr);
-        strcat(neigh_send_inform,radios[i].channel);
-        printf("channel %s\n",radios[i].channel);
         strcat(neigh_send_inform," ");
+        strcat(neigh_send_inform,radios[i].channel);
+        printf("neigh_send_inform,channel %s\n",neigh_send_inform);
+        printf("channel %s\n",radios[i].channel);
+        
         strcat(neigh_send_inform," ");
         strcat(neigh_send_inform, radio_result);
-        printf("nei %s\n",radio_result);
+        printf("nei ~~~~~~~~~~~~~~~ %s\n",radio_result);
         strcat(neigh_send_inform, "\r\n");
         printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
         
         //fputs("~~~~",fp);
         printf("neigh_send_inform：\n%s\n",neigh_send_inform);
+        
+        
+        //huanhangfu !!!
+        
         
         fputs(neigh_send_inform, fp);
         //printf("neigh_send_inform：%s\n",neigh_send_inform);
@@ -426,16 +439,21 @@ char * get_nei_infor(char * result, struct radio_type radio){
 				printf("tx_rate int :%d\n",num);
                 radio.neighbors[t].tx_rate = num;
                 char * words_next;
-				printf("strline %s\n",str_tmp);
-                words_next = strtok(str_tmp,"s");
-				printf("%s\n",words_next);
-                words_next = tok_forward(words_next,1,"s");
-				printf("%s\n",words_next);
-                char tx_qam_str[100];
-                strncpy(tx_qam_str,words_next+1,strlen(words_next)-1);
-                printf("tx qam1:%s\n",tx_qam_str);
+                char tx_qam_str[100] = "\0";
+                words_next = strstr(str_tmp,"MBit/s ");
+                printf("%s\n",words_next);
+                strncpy(tx_qam_str,words_next+7,strlen(words_next)-9);
+				//printf("strline %s\n",str_tmp);
+                //words_next = strtok(str_tmp,"s");
+				//printf("%s\n",words_next);
+               // words_next = tok_forward(words_next,1,"s");
+				//printf("%s\n",words_next);
+               // words_next[strlen(words_next)-2] = '\0';
+                //char tx_qam_str[100] = "\0";
+               // strcpy(tx_qam_str,words_next);
+                //printf("tx qam1:%s\n",tx_qam_str);
 				strrpc(tx_qam_str," ","$");
-				tx_qam_str[strlen(words_next)-2] = '\0';
+				//tx_qam_str[strlen(words_next)-2] = '\0';
 				printf("tx_qam_str:%s\n",tx_qam_str);
                 strcpy(radio.neighbors[t].tx_qam,tx_qam_str);//获取tx速率
             }
@@ -450,29 +468,38 @@ char * get_nei_infor(char * result, struct radio_type radio){
                 radio.neighbors[t].rx_rate = num;
 				printf("rx_rate int :%d\n",num);
                 char * words_next;
-				printf("strline %s\n",str_tmp);
+				//printf("strline %s\n",str_tmp);
+                char rx_qam_str[100] = "\0";
+                words_next = strstr(str_tmp,"MBit/s ");
+                printf("%s\n",words_next);
+                strncpy(rx_qam_str,words_next+7,strlen(words_next)-9);
+                //printf("rx qam1:%s\n",rx_qam_str);
+                
                 words_next = strtok(str_tmp,"s");
-				printf("%s\n",words_next);
-                words_next = tok_forward(words_next,1,"s");
-				printf("%s\n",words_next);
-                char rx_qam_str[100];
-                strncpy(rx_qam_str,words_next+1,strlen(words_next)-1);
+				//printf("%s\n",words_next);
+                //words_next = tok_forward(words_next,1,"s");
+				//printf("%s\n",words_next);
+                //words_next[strlen(words_next)-2] = '\0';
+                
+                //strcpy(rx_qam_str,words_next);
 				
-                printf("rx qam1:%s\n",rx_qam_str);
+                //printf("rx qam1:%s\n",rx_qam_str);
                 strrpc(rx_qam_str," ","$");
-				rx_qam_str[strlen(words_next)-2] = '\0';
-				printf("rx_qam_str:%s\n",rx_qam_str);
+				//rx_qam_str[strlen(words_next)-2] = '\0';
+				printf("rx_qam_str @@@@@@@@@@@@@@@@@@@@@ :%s\n",rx_qam_str);
                 strcpy(radio.neighbors[t].rx_qam,rx_qam_str);//获取rx速率
             }
         }
         else if(strcmp(flag, "authorized:") == 0){
             //radio.neighbors[t];
-            strcat(result," ");
+            
             strcat(result,compose_neighbor(radio.neighbors[t]));
+            strcat(result," ");
             printf("result ,:%s \n",result);
 			t++;
         }
     }
+    result[strlen(result)-1] = '\0';
 	if(fclose(fp)) printf("file close error!\n");
 	printf("%d\n",radio_no);
     printf("neighbor:%s\n,%d\n,%s\n,%f\n,%d\n,%s\n,%f\n",\
