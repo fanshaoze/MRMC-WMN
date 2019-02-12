@@ -174,7 +174,7 @@ void radios_inform_init2(struct radio_type * radios){
             printf("radios_mac_addr[j],%d,%s\n",j,radios_mac_addr[j]);
             //char hdaddr[hdaddr_len];
             //strcpy(hdaddr,radios_mac_addr[j]);
-            radios_mac_addr[j][strlen(radios_mac_addr[j])-2] = '\0';
+            radios_mac_addr[j][strlen(radios_mac_addr[j])-1] = '\0';
             //strcpy(radios_mac_addr[j],hdaddr);
             //printf("radios_mac_addr[j],%s\n",radios_mac_addr[j]);
             //printf("radios_id[j],%s\n",radios_id[j]);
@@ -248,42 +248,42 @@ int get_neighbor(int clientSocket,struct radio_type * radios){
         neigh_send_inform[0] = '\0';
         radio_result[0] = '\0';
         strcpy(radio_result, get_nei_infor(radio_result,radios[i]));
-        sprintf(neigh_send_inform,"%s%s",neigh_send_inform,"NEIGHBOR ");
-		//strcat(neigh_send_inform,"NEIGHBOR ");
-        sprintf(neigh_send_inform,"%s%s",neigh_send_inform,node_id);
-        //strcat(neigh_send_inform,node_id);
+        //sprintf(neigh_send_inform,"%s%s",neigh_send_inform,"NEIGHBOR ");
+		strcat(neigh_send_inform,"NEIGHBOR ");
+       // sprintf(neigh_send_inform,"%s%s",neigh_send_inform,node_id);
+        strcat(neigh_send_inform,node_id);
         printf("node_id %s\n",node_id);
-<<<<<<< HEAD
-        printf("neigh_send_inform,node_id %s\n",neigh_send_inform);
+//<<<<<<< HEAD
+        //printf("neigh_send_inform,node_id %s\n",neigh_send_inform);
         strcat(neigh_send_inform," ");
         strcat(neigh_send_inform,radios[i].mac_addr);
-        printf("neigh_send_inform,mac %s\n",neigh_send_inform);
+       // printf("neigh_send_inform,mac %s\n",neigh_send_inform);
         printf("mac_addr %s\n",radios[i].mac_addr);
         strcat(neigh_send_inform," ");
         strcat(neigh_send_inform,radios[i].channel);
-        printf("neigh_send_inform,channel %s\n",neigh_send_inform);
+        //printf("neigh_send_inform,channel %s\n",neigh_send_inform);
         printf("channel %s\n",radios[i].channel);
         
         strcat(neigh_send_inform," ");
         strcat(neigh_send_inform, radio_result);
         printf("nei ~~~~~~~~~~~~~~~ %s\n",radio_result);
-=======
-        sprintf(neigh_send_inform,"%s%s",neigh_send_inform," ");
+//=======
+        //sprintf(neigh_send_inform,"%s%s",neigh_send_inform," ");
 		//strcat(neigh_send_inform," ");
-		sprintf(neigh_send_inform,"%s%s",neigh_send_inform,radios[i].mac_addr);
+		//sprintf(neigh_send_inform,"%s%s",neigh_send_inform,radios[i].mac_addr);
         //strcat(neigh_send_inform,radios[i].mac_addr);
-        printf("mac_addr %s\n",radios[i].mac_addr);
-        sprintf(neigh_send_inform,"%s%s",neigh_send_inform," ");
+        //printf("mac_addr %s\n",radios[i].mac_addr);
+        //sprintf(neigh_send_inform,"%s%s",neigh_send_inform," ");
 		//strcat(neigh_send_inform," ");
-		sprintf(neigh_send_inform,"%s%s",neigh_send_inform,radios[i].channel);
+		//sprintf(neigh_send_inform,"%s%s",neigh_send_inform,radios[i].channel);
 		//strcat(neigh_send_inform,radios[i].channel);
-        printf("channel %s\n",radios[i].channel);
-		sprintf(neigh_send_inform,"%s%s",neigh_send_inform," ");
+        //printf("channel %s\n",radios[i].channel);
+		//sprintf(neigh_send_inform,"%s%s",neigh_send_inform," ");
         //strcat(neigh_send_inform," ");
-        sprintf(neigh_send_inform,"%s%s",neigh_send_inform,radio_result);
+        //sprintf(neigh_send_inform,"%s%s",neigh_send_inform,radio_result);
         //strcat(neigh_send_inform, radio_result);
         printf("nei %s\n",radio_result);
->>>>>>> origin/master
+//>>>>>>> origin/master
         strcat(neigh_send_inform, "\r\n");
         printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
         
@@ -435,9 +435,10 @@ char * get_nei_infor(char * result, struct radio_type radio){
            // station_number+=1;
 			words = tok_forward(words,1," ");
             strcpy(mac_addr,words);
-            //printf("%s\n",mac_addr);
+            //printf("mac addr &&&&&&&&&&&&&&&& %s\n",mac_addr);
             //words = tok_forward(words,1," ");
             strcpy(radio.neighbors[t].mac_addr,mac_addr);//获取mac地址
+            printf("mac addr &&&&&&&&&&&&&&&& %s\n",radio.neighbors[t].mac_addr);
         }
         else if(strcmp(flag, "signal:") == 0){
             words = tok_forward(words,1," ");
