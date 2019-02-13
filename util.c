@@ -134,7 +134,6 @@ int radio_disable_all(struct radio_type * radios){
     int i = 0;
     for(i = 0;i<radio_no;i++){
         no_in_wlan = strtok(radios[i].radio_id,"n");
-        //no_in_wlan.substr(4,strlen(radio.radio_id));
         no_in_wlan = strtok(NULL,"n");
         sprintf(set_disabled,"%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].disabled=1");
         system(set_disabled);
@@ -153,8 +152,6 @@ int enable_all_radios(struct radio_type * radios){
         strcpy(no_in_wlan,radios[i].radio_id);
         no_in_wlan[strlen(radios[i].radio_id)] = '\0';
         char * no_str = strtok(no_in_wlan,"n");
-        //no_in_wlan = strtok(radios[i].radio_id,"n");
-        //printf("no0,%s\n",no_in_wlan);
        no_str = strtok(NULL,"n");
         printf("no1,%s\n",no_str);
         sprintf(set_enabled,"%s%s%s","uci set wireless.@wifi-device[",no_str,"].disabled=0");
