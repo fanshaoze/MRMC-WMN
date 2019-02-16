@@ -210,6 +210,7 @@ int get_neighbor(int clientSocket,struct radio_type * radios){
         //fputs("~~~~",fp);
         printf("neigh_send_inform：\n%s\n",neigh_send_inform);
         fputs(neigh_send_inform, fp);
+        send(clientSocket, neigh_send_inform, strlen(neigh_send_inform), 0);
         
     }
 	fclose(fp);

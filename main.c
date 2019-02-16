@@ -13,7 +13,6 @@
 #include <unistd.h>
 
 #include "meshclient.h"
-#define SERVER_PORT 6666
 /*
 连接到服务器后，会不停循环，等待输入，
 输入quit后，断开与服务器的连接
@@ -32,7 +31,7 @@ int main()
 	radios_inform_init2(radios);
     char sendbuf[200];
 	char recvbuf[200];
-/*
+
 //客户端只需要一个套接字文件描述符，用于和服务器通信
 	int clientSocket;
 	//描述服务器的socket
@@ -43,11 +42,11 @@ int main()
     	return 1;
 	}
     serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons(SERVER_PORT);
+    serverAddr.sin_port = htons(sendport);
     //指定服务器端的ip，本地测试：192.168.1.152
     //inet_addr()函数，将点分十进制IP转换成网络字节序IP
-    //serverAddr.sin_addr.s_addr = inet_addr("192.168.1.152");
-    serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    serverAddr.sin_addr.s_addr = inet_addr(ipaddr);
+    //serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
     if(connect(clientSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0){
     	perror("connect");
     	return 1;
@@ -55,20 +54,16 @@ int main()
     printf("连接到主机...\n");
     printf("发送消息:");
     //scanf("%s", sendbuf);
-    strcpy(sendbuf,"123");
+    strcpy(sendbuf,"1231111111111111111111111\r\n");
     printf("\n");
-    send(clientSocket, sendbuf, strlen(sendbuf), 0);
-*/
+    //send(clientSocket, sendbuf, strlen(sendbuf), 0);
+    printf("here");
+    get_neighbor(clientSocket,radios);
+
     while(1)
 
     {
-/*
-    	//printf("发送消息:");
-    	//标识start
-        //scanf("%s", sendbuf);
-        //get the mac addr of radio0 as node ID
-   		//printf("\n");
-    	//send(clientSocket, sendbuf, strlen(sendbuf), 0);
+
 
         //radios_inform_init(radios);
    		if(strcmp(sendbuf, "quit") == 0)
@@ -78,7 +73,6 @@ int main()
     	iDataNum = recv(clientSocket, recvbuf, 200, 0);
         //从服务器端接收命令
     	recvbuf[iDataNum] = '\0';
-*/
         //begin
         strcpy(recvbuf,"DISCOVER");
         printf("%s\n", recvbuf);
@@ -105,6 +99,7 @@ int main()
             case 3:
                 printf("here");
                 get_neighbor(1,radios);
+                //修改，发送！
                 //&&&&&get_neighbor(clientSocket,radios);
 				break;
 				//printf("stop\n");

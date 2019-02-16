@@ -19,6 +19,20 @@
 #define radio_max 10
 #define hdaddr_len 18
 
+#define freqcom "iwlist "
+#define freqcom " channel"
+#define freqfile " "
+#define wlancom "ifconfig"
+#define wlanfile "/home/fan/codelite/mesh-client/ifconfig"
+#define neicom0 "iw dev "
+#define neicom1 " station dump"
+
+#define ipaddr "192.168.1.10"
+#define sendport 10001
+#define receiveport 10002
+
+
+
 char node_id[50];
 int radio_no;
 
