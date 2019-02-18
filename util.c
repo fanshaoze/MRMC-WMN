@@ -18,6 +18,7 @@ int shutdown_net(){
 void radio_init(struct radio_type * radios){
     int i = 0;
     for (i = 0;i<radio_no;i++){
+        radios[i].disabled = 0;
         if(radios[i].freq == 5){
             strcpy(radios[i].channel,init_channel_5G);
             strcpy(radios[i].ssid,init_ssid_5G);
@@ -45,6 +46,8 @@ int alloc_channel_ssid(struct radio_type radio){
     //no_in_wlan.substr(4,strlen(radio.radio_id));
     sprintf(set_channel,"%s%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].channel=",radio.channel);
     sprintf(set_ssid,"%s%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].ssid=",radio.ssid);
+    printf("set_channel %s\n",set_channel);
+    printf("set_ssid %s\n",set_ssid);
     system(set_channel);
     system(set_ssid);
     //system("uci commit wireless");
@@ -115,6 +118,7 @@ char * compose_neighbor(struct node_neighbor neighbor){
 }
 
 int radio_disable(struct radio_type radio){
+    radio.disabled = 1;
     char set_disabled[100];
     char * no_in_wlan;
     no_in_wlan = strtok(radio.radio_id,"n");
@@ -133,10 +137,12 @@ int radio_disable_all(struct radio_type * radios){
     char * no_in_wlan;
     int i = 0;
     for(i = 0;i<radio_no;i++){
+        radios[i].disabled = 1;
         no_in_wlan = strtok(radios[i].radio_id,"n");
         no_in_wlan = strtok(NULL,"n");
         sprintf(set_disabled,"%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].disabled=1");
-        system(set_disabled);
+        printf("%s\n",set_disabled);
+        //system(set_disabled);
     }
     confirm_wireless();
     return 0;
@@ -148,6 +154,7 @@ int enable_all_radios(struct radio_type * radios){
     
     //strcpy(no_in_wlan,radios[i].radio_id)
     for(i = 0;i<radio_no;i++){
+        radios[i].disabled = 0;
         char no_in_wlan[10];
         strcpy(no_in_wlan,radios[i].radio_id);
         no_in_wlan[strlen(radios[i].radio_id)] = '\0';

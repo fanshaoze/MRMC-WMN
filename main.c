@@ -59,6 +59,39 @@ int main()
     //send(clientSocket, sendbuf, strlen(sendbuf), 0);
     printf("here");
     get_neighbor(clientSocket,radios);
+    
+    
+    int clientSocket1;
+	//描述服务器的socket
+	struct sockaddr_in serverAddr1;
+	char sendbuf1[200];
+	char recvbuf1[300];
+    char recvbuf2[300];
+	int iDataNum1;
+	if((clientSocket1 = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+	{
+    	perror("socket");
+    	return 1;
+	}
+    serverAddr1.sin_family = AF_INET;
+    serverAddr1.sin_port = htons(receiveport);
+    //指定服务器端的ip，本地测试：127.0.0.1
+    //inet_addr()函数，将点分十进制IP转换成网络字节序IP
+    serverAddr1.sin_addr.s_addr = inet_addr("192.168.1.10");
+    if(connect(clientSocket1, (struct sockaddr *)&serverAddr1, sizeof(serverAddr1)) < 0)
+    {
+    	perror("connect");
+    	return 1;
+    }
+    printf("连接到主机2...\n");
+  
+       strcpy(sendbuf1,"node_id22222 \n");
+    printf("%s",sendbuf1);
+    
+    send(clientSocket1, sendbuf1, strlen(sendbuf1), 0);
+    
+    recvbuf1[0] = '\0';
+    
 
     while(1)
 
@@ -66,21 +99,22 @@ int main()
 
 
         //radios_inform_init(radios);
-   		if(strcmp(sendbuf, "quit") == 0)
+   		if(strcmp(sendbuf1, "quit") == 0)
     		break;
     	printf("读取消息:");
-    	recvbuf[0] = '\0';
-    	iDataNum = recv(clientSocket, recvbuf, 200, 0);
+    	
+    	iDataNum1 = recv(clientSocket1, recvbuf1, 1000, 0);
         //从服务器端接收命令
-    	recvbuf[iDataNum] = '\0';
+    	recvbuf1[iDataNum1] = '\0';
         //begin
-        strcpy(recvbuf,"DISCOVER");
-        printf("%s\n", recvbuf);
-        recvbuf[strlen("DISCOVER")] = '\0';
-        printf("%s\n", recvbuf);
+        //strcpy(recvbuf1,"DISCOVER");
+        printf("%s\n", recvbuf1);
+        strcpy(recvbuf2,recvbuf1);
+        //recvbuf1[strlen("DISCOVER")] = '\0';
+        //printf("%s\n", recvbuf1);
         //end
         //解析命令，将命令和标识相对应，
-        com_no = decode_command(recvbuf);
+        com_no = decode_command(recvbuf2);
         //char com_no = command_no();
         printf("com no %d,\n",com_no);
         switch (com_no){
@@ -89,12 +123,16 @@ int main()
                     //关闭所有的射频
                     radio_disable_all(radios);
                 }
-                 //break;
+                 break;
             case 2:
-                get_channel_ssid(radios,recvbuf);//获取命令中每个射频分配的channel和ssid
+                printf("recv1 : %s\n", recvbuf1);
+                get_channel_ssid(radios,recvbuf1);//获取命令中每个射频分配的channel和ssid
                 for(i = 0;i<radio_no;i++){
-                    alloc_channel_ssid(radios[i]);
+                    if(radios[i].disabled == 0){
+                        alloc_channel_ssid(radios[i]);
+                    }
                 }
+                break;
                 //&&&&&&&confirm_wireless();
             case 3:
                 printf("here");
@@ -107,7 +145,9 @@ int main()
                 printf("command error\n");
                 break;
         }
-		break;
+        recvbuf[0] = '\0';
+		//break;
+        
     }
     //shutdown_net();
     //close(clientSocket);

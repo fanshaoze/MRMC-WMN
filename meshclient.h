@@ -44,6 +44,7 @@ struct radio_type{
     int neigh_count;
     int freq;
     struct node_neighbor * neighbors;
+    int disabled;
 };
 
 struct node_neighbor{
