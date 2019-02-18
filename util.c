@@ -43,15 +43,12 @@ int alloc_channel_ssid(struct radio_type radio){
     char * no_in_wlan;
     no_in_wlan = strtok(radio.radio_id,"n");
     no_in_wlan = strtok(NULL,"n");
-    //no_in_wlan.substr(4,strlen(radio.radio_id));
     sprintf(set_channel,"%s%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].channel=",radio.channel);
     sprintf(set_ssid,"%s%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].ssid=",radio.ssid);
     printf("set_channel %s\n",set_channel);
     printf("set_ssid %s\n",set_ssid);
     system(set_channel);
     system(set_ssid);
-    //system("uci commit wireless");
-    //system("/etc/init.d/network restart");
     return 0;
 }
 
