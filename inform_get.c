@@ -12,7 +12,6 @@ int radios_inform_init(){
     //enable_all_radios()
     char * words;
     char wl[5];
-    printf("^^^^^^^^^^^^^^^^^^^^\n");
     //本机命令行ifconfig，获取radio，判断该radio为2.4还是5，并且确定该radio的ID是wlan*
 
     //system("sh /home/fan/getradio.sh");
@@ -53,7 +52,7 @@ int radios_inform_init(){
             strcpy(radios_mac_addr[j],words);//存储该radio的mac地址到mac数组中
 
             freq = get_freq(radios_id[j]);//根据该行是wlan*来获取可用的信道数量，进而判断是2.4还是5
-            printf("radios_mac_addr[j],%d,%s\n",j,radios_mac_addr[j]);
+            //printf("radios_mac_addr[j],%d,%s\n",j,radios_mac_addr[j]);
             radios_mac_addr[j][strlen(radios_mac_addr[j])-2] = '\0';
             //计算5G和2.4G的数量，这里以后可能会用于区分5G和2.4G，以后只用5G组网时使用
             if(freq == 5){
@@ -90,7 +89,7 @@ void radios_inform_init2(struct radio_type * radios){
     //enable_all_radios()
     char * words;
     char wl[5];
-    printf("^^^^^^^^^^^^^^^^^^^^\n");
+    //printf("^^^^^^^^^^^^^^^^^^^^\n");
     //本机命令行ifconfig，获取radio，判断该radio为2.4还是5，并且确定该radio的ID是wlan*
 
     //system("sh /home/fan/getradio.sh");
@@ -131,13 +130,9 @@ void radios_inform_init2(struct radio_type * radios){
         wl[4] = '\0';
         if (strcmp(wl, "wlan") == 0){
             strcpy(radios_id[j],words);//存储该radio的wlan标示到数组中
-            printf("??????????????");
-            printf("wordswords:%s\n",words);
             words = tok_forward(words,4," ");
             strcpy(radios_mac_addr[j],words);//存储该radio的mac地址到mac数组中
-
             freq = get_freq(radios_id[j]);//根据该行是wlan*来获取可用的信道数量，进而判断是2.4还是5
-            printf("radios_mac_addr[j],%d,%s\n",j,radios_mac_addr[j]);
             radios_mac_addr[j][strlen(radios_mac_addr[j])-1] = '\0';
             radios_freq[j] = freq;//存储频段信息到数据中，
             j++;
@@ -149,19 +144,18 @@ void radios_inform_init2(struct radio_type * radios){
     //按顺序为每个radio赋值
     for(j = 0;j<radio_no;j++){
         strcpy(radios[j].radio_id,radios_id[j]);
-        //printf("radio_id %s\n",radios_id[j]);
         strcpy(radios[j].mac_addr,radios_mac_addr[j]);
-        //radios[j].mac_addr[strlen(radios[j].mac_addr)-2] = '\0';
         radios[j].freq = radios_freq[j];
 		radios[j].mac_addr[strlen(radios[j].mac_addr)-1] = '\0';
-        //printf("freq,%d,%d\n",j,freq);
+
     }
 	//为每个radio设置初始化的射频和信道，这里init没有让ssid和channel生效，只是赋值
     radio_init(radios);
-    printf("%d\n",radio_no);
-    printf("radios:0\n,%s\n,%s\n,%s\n,%s\n",radios[0].channel,radios[0].mac_addr,radios[0].ssid,radios[0].radio_id);
-    printf("fenge************************\n");
-    printf("radios:1\n,%s\n,%s\n,%s\n,%s\n",radios[1].channel,radios[1].mac_addr,radios[1].ssid,radios[1].radio_id);
+    //printf("%d\n",radio_no);
+    //循环打印！！！！
+    //printf("radios:0\n,%s\n,%s\n,%s\n,%s\n",radios[0].channel,radios[0].mac_addr,radios[0].ssid,radios[0].radio_id);
+   // printf("fenge************************\n");
+    //printf("radios:1\n,%s\n,%s\n,%s\n,%s\n",radios[1].channel,radios[1].mac_addr,radios[1].ssid,radios[1].radio_id);
     //return radios;
 }
 
@@ -177,7 +171,6 @@ int get_neighbor(int clientSocket,struct radio_type * radios){
         printf("error!");
         return 0;
     }
-    printf("get_neighbor\n");
     enable_all_radios(radios);
     char neigh_send_inform[1000];
     char radio_result[1000];
@@ -190,22 +183,21 @@ int get_neighbor(int clientSocket,struct radio_type * radios){
 		strcat(neigh_send_inform,"NEIGHBOR ");
 
         strcat(neigh_send_inform,node_id);
-        printf("node_id %s\n",node_id);
+       
 
         strcat(neigh_send_inform," ");
         strcat(neigh_send_inform,radios[i].mac_addr);
-        printf("mac_addr %s\n",radios[i].mac_addr);
+        
         
         strcat(neigh_send_inform," ");
         strcat(neigh_send_inform,radios[i].channel);
-        printf("channel %s\n",radios[i].channel);
+        
         
         strcat(neigh_send_inform," ");
         strcat(neigh_send_inform, radio_result);
-        printf("nei ~~~~~~~~~~~~~~~ %s\n",radio_result);
         
         strcat(neigh_send_inform, "\r\n");
-        printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+      
         
         //fputs("~~~~",fp);
         printf("neigh_send_inform：\n%s\n",neigh_send_inform);
@@ -223,7 +215,6 @@ int get_neighbor(int clientSocket,struct radio_type * radios){
 
 int get_freq(char * wlan){
 
-    printf("get_freq*******************\n");
 
  /***********************
     char * orig_com = "sh /home/fan/gechannels.sh";
@@ -257,7 +248,6 @@ int get_freq(char * wlan){
         words = strtok(StrLine," ");
         words = strtok(NULL," ");
         strcpy(channel_number,words);
-        printf("channel_number:%s\n",channel_number);
         if (strcmp(channel_number, "11") == 0){
             //printf("the freq of this is 2.4\n");
             return 2;
@@ -289,7 +279,6 @@ char * get_nei_infor(char * result, struct radio_type radio){
     if(strcmp(radio.radio_id,"wlan1") == 0)
         strcpy(filename,"/home/fan/codelite/mesh-client/dump"); //文件名
     filename[strlen("/home/fan/codelite/mesh-client/dump")] = '\0';
-    printf("filename::%s\n",filename);
     FILE *fp;
     char * words;
     char mac_addr[1050];
@@ -332,18 +321,16 @@ char * get_nei_infor(char * result, struct radio_type radio){
            // station_number+=1;
 			words = tok_forward(words,1," ");
             strcpy(mac_addr,words);
-            //printf("mac addr &&&&&&&&&&&&&&&& %s\n",mac_addr);
             //words = tok_forward(words,1," ");
             strcpy(radio.neighbors[t].mac_addr,mac_addr);//获取mac地址
-            printf("mac addr &&&&&&&&&&&&&&&& %s\n",radio.neighbors[t].mac_addr);
+           
         }
         else if(strcmp(flag, "signal:") == 0){
             words = tok_forward(words,1," ");
             strcpy(signal,words);
-            printf("%s\n",signal);
+            
             //char * signal_splite = strtok(,"M");
             int num=atoi(signal);
-			printf("signal int :%d\n",num);
             radio.neighbors[t].signal = num;//获取信号强度
 			radio.neighbors[t].noise = -95;
         }
@@ -352,17 +339,13 @@ char * get_nei_infor(char * result, struct radio_type radio){
             if(strcmp(words,"bitrate:") == 0){
                 words = tok_forward(words,1," ");
                 strcpy(tx_rate_str,words);
-                printf("%s\n",tx_rate_str);
                 int num=atoi(tx_rate_str);
-				printf("tx_rate int :%d\n",num);
                 radio.neighbors[t].tx_rate = num;
                 char * words_next;
                 char tx_qam_str[100] = "\0";
                 words_next = strstr(str_tmp,"MBit/s ");
-                printf("%s\n",words_next);
                 strncpy(tx_qam_str,words_next+7,strlen(words_next)-9);
 				strrpc(tx_qam_str," ","$");
-				printf("tx_qam_str:%s\n",tx_qam_str);
                 strcpy(radio.neighbors[t].tx_qam,tx_qam_str);//获取tx速率
             }
         }
@@ -371,20 +354,16 @@ char * get_nei_infor(char * result, struct radio_type radio){
             if(strcmp(words,"bitrate:") == 0){
                 words = tok_forward(words,1," ");
                 strcpy(rx_rate_str,words);
-                printf("%s\n",rx_rate_str);
                 int num=atoi(rx_rate_str);
                 radio.neighbors[t].rx_rate = num;
-				printf("rx_rate int :%d\n",num);
                 char * words_next;
 				//printf("strline %s\n",str_tmp);
                 char rx_qam_str[100] = "\0";
                 words_next = strstr(str_tmp,"MBit/s ");
-                printf("%s\n",words_next);
                 strncpy(rx_qam_str,words_next+7,strlen(words_next)-9);
                 words_next = strtok(str_tmp,"s");
                 strrpc(rx_qam_str," ","$");
 				//rx_qam_str[strlen(words_next)-2] = '\0';
-				printf("rx_qam_str @@@@@@@@@@@@@@@@@@@@@ :%s\n",rx_qam_str);
                 strcpy(radio.neighbors[t].rx_qam,rx_qam_str);//获取rx速率
             }
         }
@@ -393,18 +372,21 @@ char * get_nei_infor(char * result, struct radio_type radio){
             
             strcat(result,compose_neighbor(radio.neighbors[t]));
             strcat(result," ");
-            printf("result ,:%s \n",result);
 			t++;
         }
     }
     result[strlen(result)-1] = '\0';
 	if(fclose(fp)) printf("file close error!\n");
-	printf("%d\n",radio_no);
-    printf("neighbor:%s\n,%d\n,%s\n,%f\n,%d\n,%s\n,%f\n",\
-	radio.neighbors[0].mac_addr,radio.neighbors[0].noise,radio.neighbors[0].rx_qam, \
-	radio.neighbors[0].rx_rate,radio.neighbors[0].signal,radio.neighbors[0].tx_qam, \
-	radio.neighbors[0].tx_rate);
-    printf("fenge************************\n");
+    int i = 0;
+    for(i = 0;i<t;i++){
+        printf("neighbor:%s ,%d ,%s\n ,%f ,%d ,%s ,%f \n",\
+        radio.neighbors[i].mac_addr,radio.neighbors[i].noise,radio.neighbors[i].rx_qam, \
+        radio.neighbors[i].rx_rate,radio.neighbors[i].signal,radio.neighbors[i].tx_qam, \
+        radio.neighbors[i].tx_rate);
+        printf("************************\n");
+    }
+    //循环打印！！！
+    //printf("fenge************************\n");
     
     return result;
 }

@@ -102,11 +102,7 @@ char * compose_neighbor(struct node_neighbor neighbor){
     sprintf(tx, "%f", neighbor.tx_rate);
     sprintf(signal, "%d", neighbor.signal);
     sprintf(noise, "%d", neighbor.noise);
-	printf("%s,rx\n",rx);
-	printf("%s,tx\n",tx);
-	printf("%s,signal\n",signal);
-	printf("%s,noise\n",noise);
-	printf("%s,macaddr\n",neighbor.mac_addr);
+	
     char * nei_inform;
     nei_inform = (char *)malloc(strlen(neighbor.mac_addr)+1+strlen(signal)+1+strlen(noise)+1+strlen(tx) +1+strlen(neighbor.tx_qam)+1+strlen(rx)+1+strlen(neighbor.rx_qam));
 	sprintf(nei_inform,"%s%s%s%s%s%s%s%s%s%s%s%s%s",neighbor.mac_addr,"#",signal,"#",noise,"#",tx,"#",neighbor.tx_qam,"#",rx,"#",neighbor.rx_qam);
@@ -122,7 +118,7 @@ int radio_disable(struct radio_type radio){
     no_in_wlan = strtok(NULL,"n");
     sprintf(set_disabled,"%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].disabled=1");
     printf("%s\n",set_disabled);
-    //system(set_disabled);
+    system(set_disabled);
     //system(set_ssid);
     //system("uci commit wireless");
     //system("/etc/init.d/network restart");

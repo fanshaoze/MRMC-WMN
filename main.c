@@ -51,13 +51,11 @@ int main()
     	perror("connect");
     	return 1;
     }
-    printf("连接到主机...\n");
+    printf("connect socket1...\n");
     printf("发送消息:");
+    strcpy(sendbuf,"send neighbor information\r\n");
     //scanf("%s", sendbuf);
-    strcpy(sendbuf,"1231111111111111111111111\r\n");
-    printf("\n");
-    //send(clientSocket, sendbuf, strlen(sendbuf), 0);
-    printf("here");
+    
     get_neighbor(clientSocket,radios);
     
     
@@ -83,12 +81,12 @@ int main()
     	perror("connect");
     	return 1;
     }
-    printf("连接到主机2...\n");
+    printf("connect socket1...\n");
   
-       strcpy(sendbuf1,"node_id22222 \n");
+    strcpy(sendbuf1,"get allocated radios\n");
     printf("%s",sendbuf1);
     
-    send(clientSocket1, sendbuf1, strlen(sendbuf1), 0);
+    //send(clientSocket1, sendbuf1, strlen(sendbuf1), 0);
     
     recvbuf1[0] = '\0';
     
@@ -101,7 +99,7 @@ int main()
         //radios_inform_init(radios);
    		if(strcmp(sendbuf1, "quit") == 0)
     		break;
-    	printf("读取消息:");
+    	printf("get message:");
     	
     	iDataNum1 = recv(clientSocket1, recvbuf1, 1000, 0);
         //从服务器端接收命令
@@ -132,11 +130,11 @@ int main()
                         alloc_channel_ssid(radios[i]);
                     }
                 }
+                confirm_wireless();
                 break;
-                //&&&&&&&confirm_wireless();
+                
             case 3:
-                printf("here");
-                get_neighbor(1,radios);
+                get_neighbor(clientSocket,radios);
                 //修改，发送！
                 //&&&&&get_neighbor(clientSocket,radios);
 				break;
