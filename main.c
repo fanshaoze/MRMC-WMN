@@ -83,10 +83,11 @@ int main()
     }
     printf("connect socket1...\n");
   
-    strcpy(sendbuf1,"get allocated radios\n");
-    printf("%s",sendbuf1);
+    //strcpy(sendbuf1,node_id);
+    sprintf(sendbuf1,"%s%s",node_id,"\r\n");
+    printf("node_ID%s",sendbuf1);
     
-    //send(clientSocket1, sendbuf1, strlen(sendbuf1), 0);
+    send(clientSocket1, sendbuf1, strlen(sendbuf1), 0);
     
     recvbuf1[0] = '\0';
     
