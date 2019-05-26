@@ -17,12 +17,12 @@
 #define init_channel_5G "36"
 #define init_ssid_5G "Link1"
 #define init_mode "ap"
-#define init_wds 1
+#define init_wds 0
 
 #define radio_max 20
 #define hdaddr_len 18
 
-#define freqcom " channel"
+#define freqcom "iwlist "
 #define freqfile " "
 #define wlancom "ifconfig"
 #define wlanfile "/home/fan/codelite/mesh-client/ifconfig"
@@ -40,7 +40,7 @@ int enable_time;
 int findnei_time;
 char init_ssid[10];
 char ipaddr[20];
-float load;
+
 struct radio_type{
     char radio_id[10];
     char mac_addr[50];
@@ -50,7 +50,6 @@ struct radio_type{
     int neigh_count;
     int freq;
     int wds;
-    float load;
     struct node_neighbor * neighbors;
     int disabled;
 };
@@ -73,12 +72,11 @@ int get_nodeid();
 int decode_command(char recv_command[]);
 int alloc_config(struct radio_type radio);
 int alloc_config_all(struct radio_type * radios);
-int get_neighbor( float* loads,int clientSocket,struct radio_type * radios);
+int get_neighbor(int clientSocket,struct radio_type * radios);
 int send_neighbor(int clientSocket, char * neigh_inform);
 int shutdown_net();
 int get_freq(char * wlan);
 char * get_nei_infor(char * result, struct radio_type radio);
-float* getload(struct radio_type * radios);
 int get_config(struct radio_type * radios,char * recv_commmand);
 int radio_disable(struct radio_type radio);
 int radio_disable_all(struct radio_type * radios);

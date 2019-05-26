@@ -1,0 +1,32 @@
+Station 04:f0:21:39:64:26 (on wlan0)
+	inactive time:	30 ms
+	rx bytes:	486798
+	rx packets:	4580
+	tx bytes:	271462
+	tx packets:	2575
+	tx retries:	0
+	tx failed:	1
+	rx drop misc:	366
+	signal:  	-35 [-35, -37, -95, -95] dBm
+	signal avg:	-33 [-35, -38, -95, -95] dBm
+	Toffset:	259200311 us
+	tx bitrate:	130.0 MBit/s MCS 14 short GI
+	rx bitrate:	72.2 MBit/s MCS 7 short GI
+	rx duration:	98248 us
+	mesh llid:	63818
+	mesh plid:	56833
+	mesh plink:	ESTAB
+	mesh local PS mode:	ACTIVE
+	mesh peer PS mode:	ACTIVE
+	mesh non-peer PS mode:	ACTIVE
+	authorized:	yes
+	authenticated:	yes
+	associated:	yes
+	preamble:	long
+	WMM/WME:	yes
+	MFP:		no
+	TDLS peer:	no
+	DTIM period:	2
+	beacon interval:100
+	short slot time:yes
+	connected time:	92 seconds

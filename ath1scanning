@@ -1,0 +1,52 @@
+ath0      Scan completed :
+          Cell 01 - Address: 04:F0:21:39:C1:5B
+                    ESSID:"Link201"
+                    Mode:Master
+                    Frequency:5.18 GHz (Channel 36)
+                    Quality=94/94  Signal level=-46 dBm  Noise level=-95 dBm
+                    Encryption key:off
+                    Bit Rates:6 Gb/s; 9 Gb/s; 12 Gb/s; 18 Gb/s; 24 Gb/s
+                              36 Gb/s; 48 Gb/s; 54 Gb/s
+                    Extra:bcn_int=100
+                    Extra:wme_ie=dd180050f2020101800003a4000027a4000042435e0062322f00
+                    Extra:phy_mode=IEEE80211_MODE_11A
+                    Extra:ath_ie=dd0900037f01010000ff7f
+                    Extra:dtim_period=1
+          Cell 02 - Address: 3C:F5:CC:84:EC:C0
+                    ESSID:"HIT-WLAN"
+                    Mode:Master
+                    Frequency:5.745 GHz (Channel 149)
+                    Quality=94/94  Signal level=-46 dBm  Noise level=-95 dBm
+                    Encryption key:off
+                    Bit Rates:6 Gb/s; 9 Gb/s; 12 Gb/s; 18 Gb/s; 24 Gb/s
+                              36 Gb/s; 48 Gb/s; 54 Gb/s
+                    Extra:bcn_int=100
+                    Extra:wme_ie=dd180050f2020101800003a4000027a4000042435e0062322f00
+                    Extra:phy_mode=IEEE80211_MODE_11AC_VHT80
+                    Extra:dtim_period=1
+          Cell 03 - Address: 3C:F5:CC:84:EC:20
+                    ESSID:"HIT-WLAN"
+                    Mode:Master
+                    Frequency:5.765 GHz (Channel 153)
+                    Quality=24/94  Signal level=-84 dBm  Noise level=-95 dBm
+                    Encryption key:off
+                    Bit Rates:6 Gb/s; 9 Gb/s; 12 Gb/s; 18 Gb/s; 24 Gb/s
+                              36 Gb/s; 48 Gb/s; 54 Gb/s
+                    Extra:bcn_int=100
+                    Extra:wme_ie=dd180050f2020101800003a4000027a4000042435e0062322f00
+                    Extra:phy_mode=IEEE80211_MODE_11AC_VHT80
+                    Extra:dtim_period=1
+          Cell 12 - Address: 04:F0:21:39:C1:5A
+                    ESSID:"Link1"
+                    Mode:Master
+                    Frequency:5.18 GHz (Channel 36)
+                    Quality=94/94  Signal level=-47 dBm  Noise level=-95 dBm
+                    Encryption key:off
+                    Bit Rates:6 Gb/s; 9 Gb/s; 12 Gb/s; 18 Gb/s; 24 Gb/s
+                              36 Gb/s; 48 Gb/s; 54 Gb/s
+                    Extra:bcn_int=100
+                    Extra:wme_ie=dd180050f2020101800003a4000027a4000042435e0062322f00
+                    Extra:phy_mode=IEEE80211_MODE_11A
+                    Extra:ath_ie=dd0900037f01010000ff7f
+                    Extra:dtim_period=1
+
