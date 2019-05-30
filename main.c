@@ -22,7 +22,7 @@ int main()
     
     printf("start\n");
     int com_no = 0;
-    snprintf(ipaddr,20,"%s","NULL");
+    
     int i = 0;
     struct radio_type * radios = NULL;
     
@@ -32,6 +32,13 @@ int main()
     radio_no = 2;
     enable_time=120;
     findnei_time = 20;
+    snprintf(ipaddr,20,"%s","NULL");
+    snprintf(hardware,20,"%s","WPJ428");
+    snprintf(neicommand,20,"%s","iw");
+    
+    //snprintf(hardware,20,"%s","WPQ864");
+    //snprintf(neicommand,20,"%s","iwlist");
+    
     char filename[] = "/config"; 
              //每行最大读取的字符数
     char * words;
@@ -45,25 +52,31 @@ int main()
     while (!feof(fp))
     {
 
-        fgets(StrLine,1024,fp);  //读取一行
+    fgets(StrLine,1024,fp);  //读取一行
 	char str_tmp[1024];
-        snprintf(str_tmp,1024,"%s",StrLine);
+    snprintf(str_tmp,1024,"%s",StrLine);
 	strrpc(str_tmp,"\n","\0");
-        printf("Str %s %s\n",StrLine,str_tmp);
+    printf("Str %s %s\n",StrLine,str_tmp);
 	words = strtok(str_tmp,":");//按照空格划分一行的内容
         printf("words %s\n",words);
 	if(strncmp(words, "Enable",6) == 0){
-            enable_time = atoi(tok_forward(words,1,":"));
-        }
-        else if(strncmp(words, "NeighborFind",12) == 0){
-            findnei_time = atoi(tok_forward(words,1,":"));
-        }
-	else if(strncmp(words, "ServerIp",8) == 0){
-            snprintf(ipaddr,20,"%s",tok_forward(words,1,":"));
-        }
+        enable_time = atoi(tok_forward(words,1,":"));
+    }
+    else if(strncmp(words, "NeighborFind",12) == 0){
+        findnei_time = atoi(tok_forward(words,1,":"));
+    }
+    else if(strncmp(words, "ServerIp",8) == 0){
+        snprintf(ipaddr,20,"%s",tok_forward(words,1,":"));
+    }
+    else if(strncmp(words, "hardware",8) == 0){
+        snprintf(hardware,20,"%s",tok_forward(words,1,":"));
+    }
+    else if(strncmp(words, "neicommand",10) == 0){
+        snprintf(neicommand,20,"%s",tok_forward(words,1,":"));
+    }
 	else printf("wrong config");
     }
-    printf("enble %d,findnei_time %d,ServerIp %s\n,",enable_time,findnei_time,ipaddr);
+    printf("enble %d,findnei_time %d,ServerIp %s,hardware %s,neicommand %s\n,",enable_time,findnei_time,ipaddr,hardware,neicommand);
 
     snprintf(init_ssid,6,"%s","Link1");
     radios_inform_init();
@@ -111,7 +124,7 @@ int main()
     }
     printf("connect socket1...\n");
     printf("发送消息:");
-    strcpy(sendbuf,"send neighbor information\r\n");
+    snprintf(sendbuf,strlen(sendbuf),"%s","send neighbor information\r\n");
     //scanf("%s", sendbuf);
     
     get_neighbor( loads,clientSocket,radios);
@@ -166,7 +179,7 @@ int main()
         //begin
         //strcpy(recvbuf1,"DISCOVER");
         printf("%s\n", recvbuf1);
-        strcpy(recvbuf2,recvbuf1);
+        snprintf(recvbuf2,strlen(recvbuf2),"%s",recvbuf1);
         //recvbuf1[strlen("DISCOVER")] = '\0';
         //printf("%s\n", recvbuf1);
         //end

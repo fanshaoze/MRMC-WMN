@@ -19,10 +19,10 @@ void radio_init(struct radio_type * radios){
     int i = 0;
     for (i = 0;i<radio_no;i++){
         radios[i].disabled = 0;
-        strcpy(radios[i].mode,init_mode);
+        snprintf(radios[i].mode,strlen(init_mode)+1,"%s",init_mode);
         radios[i].wds = init_wds;
-        strcpy(radios[i].channel,init_channel_5G);
-        strcpy(radios[i].ssid,init_ssid);
+        snprintf(radios[i].channel,strlen(init_channel_5G)+1,"%s",init_channel_5G);
+        snprintf(radios[i].ssid,strlen(init_ssid)+1,"%s",init_ssid);
     }
 }
 
@@ -39,14 +39,24 @@ int alloc_config(struct radio_type radio){
     char set_channel[100];
     char set_ssid[100];
     char set_mode[100];
+    char set_meshid[100];
     char set_wds[100];
     char set_hwmode[100];
     char set_hwmode_d[100];
      char id_temp[10];
     char * no_in_wlan;
     snprintf(id_temp,10,"%s",radio.radio_id);
-    no_in_wlan = strtok(id_temp,"h");
-    no_in_wlan = strtok(NULL,"h");
+    if(strcmp(hardware,hardware0)==0){
+        no_in_wlan = strtok(id_temp,"n");
+        no_in_wlan = strtok(NULL,"n");
+        sprintf(set_meshid,"%s%s%s%s","uci set wireless.@wifi-iface[",no_in_wlan,"].mesh_id=",radio.ssid);
+        printf("set_meshid %s\n",set_meshid);
+        system(set_meshid);
+    }
+    else if(strcmp(hardware,hardware0)==0){
+        no_in_wlan = strtok(id_temp,"h");
+        no_in_wlan = strtok(NULL,"h");
+    }
     sprintf(set_enabled,"%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].disabled=0");
     sprintf(set_channel,"%s%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].channel=",radio.channel);
     sprintf(set_ssid,"%s%s%s%s","uci set wireless.@wifi-iface[",no_in_wlan,"].ssid=",radio.ssid);
@@ -76,6 +86,7 @@ int alloc_config_all(struct radio_type * radios){
     char set_enabled[100];
     char set_channel[100];
     char set_ssid[100];
+    char set_meshid[100];
     char set_mode[100];
     char set_wds[100];
     char set_hwmode[100];
@@ -85,8 +96,17 @@ int alloc_config_all(struct radio_type * radios){
     int i = 0;
     for(i = 0;i<radio_no;i++){
         snprintf(id_temp,10,"%s",radios[i].radio_id);
-        no_in_wlan = strtok(id_temp,"h");
-        no_in_wlan = strtok(NULL,"h");
+        if(strcmp(hardware,hardware0)==0){
+            no_in_wlan = strtok(id_temp,"n");
+            no_in_wlan = strtok(NULL,"n");
+            sprintf(set_meshid,"%s%s%s%s","uci set wireless.@wifi-iface[",no_in_wlan,"].mesh_id=",radios[i].ssid);
+            printf("set_meshid %s\n",set_meshid);
+            system(set_meshid);
+        }
+        else if(strcmp(hardware,hardware0)==0){
+            no_in_wlan = strtok(id_temp,"h");
+            no_in_wlan = strtok(NULL,"h");
+        }
         sprintf(set_enabled,"%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].disabled=0");
         sprintf(set_channel,"%s%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].channel=",radios[i].channel);
         sprintf(set_ssid,"%s%s%s%s","uci set wireless.@wifi-iface[",no_in_wlan,"].ssid=",radios[i].ssid);
@@ -94,7 +114,7 @@ int alloc_config_all(struct radio_type * radios){
         sprintf(set_wds,"%s%s%s%d","uci set wireless.@wifi-iface[",no_in_wlan,"].wds=",1);
         sprintf(set_hwmode,"%s%s%s%s","uci set wireless.@wifi-iface[",no_in_wlan,"].hwmode=","11ac");
         sprintf(set_hwmode_d,"%s%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].hwmode=","11ac");
-	printf("set_enabled %s\n",set_enabled);
+        printf("set_enabled %s\n",set_enabled);
         printf("set_channel %s\n",set_channel);
         printf("set_ssid %s\n",set_ssid);
         printf("set_mode %s\n",set_mode);

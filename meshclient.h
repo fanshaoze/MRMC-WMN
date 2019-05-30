@@ -29,6 +29,12 @@
 #define neicom0 "iw dev "
 #define neicom1 " station dump"
 
+#define hardware0 " WPQ864"
+#define hardware1 " WPJ428"
+
+#define command0 " iw"
+#define command1 " iwlist"
+
 #define sendport 10001
 #define receiveport 10002
 
@@ -38,9 +44,15 @@ char node_id[50];
 int radio_no;
 int enable_time;
 int findnei_time;
+
+char hardware[10];
+char neicommand[20];
+
 char init_ssid[10];
 char ipaddr[20];
 float load;
+
+
 struct radio_type{
     char radio_id[10];
     char mac_addr[50];
@@ -77,7 +89,8 @@ int get_neighbor( float* loads,int clientSocket,struct radio_type * radios);
 int send_neighbor(int clientSocket, char * neigh_inform);
 int shutdown_net();
 int get_freq(char * wlan);
-char * get_nei_infor(char * result, struct radio_type radio);
+char * get_nei_infor_iw(char * result, struct radio_type radio);
+char * get_nei_infor_iwlist(char * result, struct radio_type radio);
 float* getload(struct radio_type * radios);
 int get_config(struct radio_type * radios,char * recv_commmand);
 int radio_disable(struct radio_type radio);
