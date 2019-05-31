@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=fan
-Date                   :=30/05/19
+Date                   :=31/05/19
 CodeLitePath           :="/home/fan/.codelite"
 LinkerName             :=gcc
 SharedObjectLinkerName :=gcc -shared -fPIC
@@ -60,7 +60,7 @@ AS       := as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/main.c$(ObjectSuffix) $(IntermediateDirectory)/inform_get.c$(ObjectSuffix) $(IntermediateDirectory)/send.c$(ObjectSuffix) $(IntermediateDirectory)/receive.c$(ObjectSuffix) $(IntermediateDirectory)/util.c$(ObjectSuffix) $(IntermediateDirectory)/command.c$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/main.c$(ObjectSuffix) $(IntermediateDirectory)/send.c$(ObjectSuffix) $(IntermediateDirectory)/util.c$(ObjectSuffix) $(IntermediateDirectory)/command.c$(ObjectSuffix) $(IntermediateDirectory)/inform_get_428.c$(ObjectSuffix) $(IntermediateDirectory)/inform_get_864.c$(ObjectSuffix) $(IntermediateDirectory)/neighbor.c$(ObjectSuffix) 
 
 
 
@@ -99,14 +99,6 @@ $(IntermediateDirectory)/main.c$(DependSuffix): main.c
 $(IntermediateDirectory)/main.c$(PreprocessSuffix): main.c
 	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/main.c$(PreprocessSuffix) "main.c"
 
-$(IntermediateDirectory)/inform_get.c$(ObjectSuffix): inform_get.c $(IntermediateDirectory)/inform_get.c$(DependSuffix)
-	$(CC) $(SourceSwitch) "/home/fan/codelite/mesh-client/inform_get.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/inform_get.c$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/inform_get.c$(DependSuffix): inform_get.c
-	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/inform_get.c$(ObjectSuffix) -MF$(IntermediateDirectory)/inform_get.c$(DependSuffix) -MM "inform_get.c"
-
-$(IntermediateDirectory)/inform_get.c$(PreprocessSuffix): inform_get.c
-	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/inform_get.c$(PreprocessSuffix) "inform_get.c"
-
 $(IntermediateDirectory)/send.c$(ObjectSuffix): send.c $(IntermediateDirectory)/send.c$(DependSuffix)
 	$(CC) $(SourceSwitch) "/home/fan/codelite/mesh-client/send.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/send.c$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/send.c$(DependSuffix): send.c
@@ -114,14 +106,6 @@ $(IntermediateDirectory)/send.c$(DependSuffix): send.c
 
 $(IntermediateDirectory)/send.c$(PreprocessSuffix): send.c
 	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/send.c$(PreprocessSuffix) "send.c"
-
-$(IntermediateDirectory)/receive.c$(ObjectSuffix): receive.c $(IntermediateDirectory)/receive.c$(DependSuffix)
-	$(CC) $(SourceSwitch) "/home/fan/codelite/mesh-client/receive.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/receive.c$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/receive.c$(DependSuffix): receive.c
-	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/receive.c$(ObjectSuffix) -MF$(IntermediateDirectory)/receive.c$(DependSuffix) -MM "receive.c"
-
-$(IntermediateDirectory)/receive.c$(PreprocessSuffix): receive.c
-	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/receive.c$(PreprocessSuffix) "receive.c"
 
 $(IntermediateDirectory)/util.c$(ObjectSuffix): util.c $(IntermediateDirectory)/util.c$(DependSuffix)
 	$(CC) $(SourceSwitch) "/home/fan/codelite/mesh-client/util.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util.c$(ObjectSuffix) $(IncludePath)
@@ -138,6 +122,30 @@ $(IntermediateDirectory)/command.c$(DependSuffix): command.c
 
 $(IntermediateDirectory)/command.c$(PreprocessSuffix): command.c
 	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/command.c$(PreprocessSuffix) "command.c"
+
+$(IntermediateDirectory)/inform_get_428.c$(ObjectSuffix): inform_get_428.c $(IntermediateDirectory)/inform_get_428.c$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/fan/codelite/mesh-client/inform_get_428.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/inform_get_428.c$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/inform_get_428.c$(DependSuffix): inform_get_428.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/inform_get_428.c$(ObjectSuffix) -MF$(IntermediateDirectory)/inform_get_428.c$(DependSuffix) -MM "inform_get_428.c"
+
+$(IntermediateDirectory)/inform_get_428.c$(PreprocessSuffix): inform_get_428.c
+	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/inform_get_428.c$(PreprocessSuffix) "inform_get_428.c"
+
+$(IntermediateDirectory)/inform_get_864.c$(ObjectSuffix): inform_get_864.c $(IntermediateDirectory)/inform_get_864.c$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/fan/codelite/mesh-client/inform_get_864.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/inform_get_864.c$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/inform_get_864.c$(DependSuffix): inform_get_864.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/inform_get_864.c$(ObjectSuffix) -MF$(IntermediateDirectory)/inform_get_864.c$(DependSuffix) -MM "inform_get_864.c"
+
+$(IntermediateDirectory)/inform_get_864.c$(PreprocessSuffix): inform_get_864.c
+	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/inform_get_864.c$(PreprocessSuffix) "inform_get_864.c"
+
+$(IntermediateDirectory)/neighbor.c$(ObjectSuffix): neighbor.c $(IntermediateDirectory)/neighbor.c$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/fan/codelite/mesh-client/neighbor.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/neighbor.c$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/neighbor.c$(DependSuffix): neighbor.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/neighbor.c$(ObjectSuffix) -MF$(IntermediateDirectory)/neighbor.c$(DependSuffix) -MM "neighbor.c"
+
+$(IntermediateDirectory)/neighbor.c$(PreprocessSuffix): neighbor.c
+	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/neighbor.c$(PreprocessSuffix) "neighbor.c"
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)

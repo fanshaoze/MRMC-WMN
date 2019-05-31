@@ -15,13 +15,29 @@ int shutdown_net(){
  * 返回值：返回替换之后的字符串
  * 版  本： V0.2
  */
-void radio_init(struct radio_type * radios){
+void radio_init_864(struct radio_type * radios){
     int i = 0;
     for (i = 0;i<radio_no;i++){
         radios[i].disabled = 0;
-        snprintf(radios[i].mode,strlen(init_mode)+1,"%s",init_mode);
+        snprintf(radios[i].mode,strlen(init_mode_864)+1,"%s",init_mode_864);
         radios[i].wds = init_wds;
         snprintf(radios[i].channel,strlen(init_channel_5G)+1,"%s",init_channel_5G);
+        snprintf(radios[i].ssid,strlen(init_ssid)+1,"%s",init_ssid);
+    }
+}
+
+void radio_init_428(struct radio_type * radios){
+    int i = 0;
+    for (i = 0;i<radio_no;i++){
+        radios[i].disabled = 0;
+        snprintf(radios[i].mode,strlen(init_mode_428)+1,"%s",init_mode_428);
+        radios[i].wds = 0;
+        if(radios[i].freq == 2){
+            snprintf(radios[i].channel,strlen(init_channel_2G)+1,"%s",init_channel_2G);
+        }
+        else if(radios[i].freq == 5){
+            snprintf(radios[i].channel,strlen(init_channel_5G)+1,"%s",init_channel_5G);
+        }
         snprintf(radios[i].ssid,strlen(init_ssid)+1,"%s",init_ssid);
     }
 }
@@ -33,6 +49,25 @@ int confirm_wireless(){
     return 0;
 }
 
+int value_init(struct radio_type * radios){
+    int i = 0;
+    
+    int *disables = (int *)malloc(sizeof(int) * radio_no);
+    for (i = 0;i<radio_no;i++){
+        disables[i] = 0;
+    }
+    for(i = 0;i<radio_no;i++){
+        snprintf(radios[i].radio_id,10,"%s","NULL");
+        snprintf(radios[i].mac_addr,50,"%s","NULL");
+        snprintf(radios[i].channel,10,"%s","NULL");
+        snprintf(radios[i].ssid,10,"%s","NULL");
+        radios[i].neigh_count = 0;
+        radios[i].freq = 0;
+        radios[i].disabled = 0;
+        radios[i].neighbors = NULL;
+    }
+    return 0;
+}
 
 int alloc_config(struct radio_type radio){
     char set_enabled[100];
@@ -53,7 +88,7 @@ int alloc_config(struct radio_type radio){
         printf("set_meshid %s\n",set_meshid);
         system(set_meshid);
     }
-    else if(strcmp(hardware,hardware0)==0){
+    else if(strcmp(hardware,hardware1)==0){
         no_in_wlan = strtok(id_temp,"h");
         no_in_wlan = strtok(NULL,"h");
     }
@@ -103,7 +138,7 @@ int alloc_config_all(struct radio_type * radios){
             printf("set_meshid %s\n",set_meshid);
             system(set_meshid);
         }
-        else if(strcmp(hardware,hardware0)==0){
+        else if(strcmp(hardware,hardware1)==0){
             no_in_wlan = strtok(id_temp,"h");
             no_in_wlan = strtok(NULL,"h");
         }
@@ -111,6 +146,7 @@ int alloc_config_all(struct radio_type * radios){
         sprintf(set_channel,"%s%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].channel=",radios[i].channel);
         sprintf(set_ssid,"%s%s%s%s","uci set wireless.@wifi-iface[",no_in_wlan,"].ssid=",radios[i].ssid);
         sprintf(set_mode,"%s%s%s%s","uci set wireless.@wifi-iface[",no_in_wlan,"].mode=",radios[i].mode);
+        //WDS是不是可以不修改
         sprintf(set_wds,"%s%s%s%d","uci set wireless.@wifi-iface[",no_in_wlan,"].wds=",1);
         sprintf(set_hwmode,"%s%s%s%s","uci set wireless.@wifi-iface[",no_in_wlan,"].hwmode=","11ac");
         sprintf(set_hwmode_d,"%s%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].hwmode=","11ac");
@@ -178,8 +214,14 @@ int radio_disable(struct radio_type radio){
     char * no_in_wlan;
      char id_temp[10];
     snprintf(id_temp,10,"%s",radio.radio_id);
-    no_in_wlan = strtok(id_temp,"h");
-    no_in_wlan = strtok(NULL,"h");
+    if(strcmp(hardware,hardware0)==0){
+        no_in_wlan = strtok(id_temp,"n");
+        no_in_wlan = strtok(NULL,"n");
+    }
+    else if(strcmp(hardware,hardware1)==0){
+        no_in_wlan = strtok(id_temp,"h");
+        no_in_wlan = strtok(NULL,"h");
+    }
     sprintf(set_disabled,"%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].disabled=1");
     printf("%s\n",set_disabled);
     system(set_disabled);
@@ -196,8 +238,14 @@ int radio_disable_all(struct radio_type * radios){
     for(i = 0;i<radio_no;i++){
         radios[i].disabled = 1;
         snprintf(id_temp,10,"%s",radios[i].radio_id);
-        no_in_wlan = strtok(id_temp,"h");
-        no_in_wlan = strtok(NULL,"h");
+        if(strcmp(hardware,hardware0)==0){
+            no_in_wlan = strtok(id_temp,"n");
+            no_in_wlan = strtok(NULL,"n");
+        }
+        else if(strcmp(hardware,hardware1)==0){
+            no_in_wlan = strtok(id_temp,"h");
+            no_in_wlan = strtok(NULL,"h");
+        }
         sprintf(set_disabled,"%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].disabled=1");
         printf("%s\n",set_disabled);
         //system(set_disabled);
@@ -213,8 +261,14 @@ int enable_all_radios(struct radio_type * radios){
     for(i = 0;i<radio_no;i++){
         radios[i].disabled = 0;
         snprintf(id_temp,10,"%s",radios[i].radio_id);
-        no_in_wlan = strtok(id_temp,"h");
-        no_in_wlan = strtok(NULL,"h");
+        if(strcmp(hardware,hardware0)==0){
+            no_in_wlan = strtok(id_temp,"n");
+            no_in_wlan = strtok(NULL,"n");
+        }
+        else if(strcmp(hardware,hardware1)==0){
+            no_in_wlan = strtok(id_temp,"h");
+            no_in_wlan = strtok(NULL,"h");
+        }
         sprintf(set_enabled,"%s%s%s","uci set wireless.@wifi-device[",no_in_wlan,"].disabled=0");
         printf("%s\n",set_enabled);
         system(set_enabled);
@@ -228,4 +282,111 @@ char * tok_forward(char* words, int index,char * signal){
         words = strtok(NULL,signal);
     }
     return words;
+}
+
+
+int getconfig(){
+      char filename[] = "/config"; 
+             //每行最大读取的字符数
+    char * words;
+    char StrLine[1024];    
+    FILE *fp;
+     if((fp = fopen(filename,"r")) == NULL) //判断文件是否存在及可读
+    {
+        printf("no config!");
+        return 0;
+    }
+    while (!feof(fp))
+    {
+
+    fgets(StrLine,1024,fp);  //读取一行
+	char str_tmp[1024];
+    snprintf(str_tmp,1024,"%s",StrLine);
+	strrpc(str_tmp,"\n","\0");
+    printf("Str %s %s\n",StrLine,str_tmp);
+	words = strtok(str_tmp,":");//按照空格划分一行的内容
+        printf("words %s\n",words);
+	if(strncmp(words, "Enable",6) == 0){
+        enable_time = atoi(tok_forward(words,1,":"));
+    }
+    else if(strncmp(words, "NeighborFind",12) == 0){
+        findnei_time = atoi(tok_forward(words,1,":"));
+    }
+    else if(strncmp(words, "ServerIp",8) == 0){
+        snprintf(ipaddr,20,"%s",tok_forward(words,1,":"));
+    }
+    else if(strncmp(words, "hardware",8) == 0){
+        snprintf(hardware,20,"%s",tok_forward(words,1,":"));
+    }
+    else if(strncmp(words, "neicommand",10) == 0){
+        snprintf(neicommand,20,"%s",tok_forward(words,1,":"));
+    }
+	else printf("wrong config");
+    }
+    
+    return 0;
+}
+
+
+int get_freq(char * wlan){
+
+
+ /***********************
+    char * orig_com = "sh /home/fan/gechannels.sh";
+    char *sh_com = (char *) malloc(strlen(orig_com) + strlen(wlan));
+
+    strcpy(sh_com, orig_com);
+    strcat(sh_com, wlan);
+    system(sh_com);
+   */
+    char command[100];
+    sprintf(command,"%s%s%s%s%s","iwlist ",wlan," channel > /tmp/",wlan,"freq");
+    char filename[100];
+    
+    system(command);
+    sprintf(filename,"%s%s%s","/tmp/",wlan,"freq");
+    printf("freq %s\n",filename);
+    /*
+    if(strcmp(wlan,"wlan0" )== 0){
+        strcpy(filename, "/home/fan/codelite/mesh-client/iwlistwlan0"); //文件名
+    }
+    if(strcmp(wlan,"wlan1") == 0){
+        strcpy(filename, "/home/fan/codelite/mesh-client/iwlistwlan1"); //文件名
+    }
+    */
+    FILE *fp;
+    char * words;
+    char channel_number[3];
+    char StrLine[1024];
+
+//changed change the command wlan -- ath
+              //每行最大读取的字符数
+    if((fp = fopen(filename,"r")) == NULL) //判断文件是否存在及可读
+    {
+        printf("error!");
+        return -1;
+    }
+    if (!feof(fp)) {
+        fgets(StrLine,1024,fp);  //读取一行
+        words = strtok(StrLine," ");
+        words = strtok(NULL," ");
+        snprintf(channel_number,4,"%s",words);
+        int ch_number=atoi(channel_number);
+        printf("ch_number is %d\n",ch_number);
+        if (ch_number<20){
+            //printf("the freq of this is 2.4\n");
+            return 2;
+        }
+        else if (ch_number>=20){
+            //printf("the freq of this is 5\n");
+            return 5;
+        }
+        else{
+            printf("error freq\n");
+            return 0;
+        }
+    }
+    if(fclose(fp)) printf("file close error!\n");
+    fp = NULL;
+    return 0;
 }

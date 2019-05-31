@@ -1,1 +1,1 @@
-./Debug/main.c.o ./Debug/inform_get.c.o ./Debug/send.c.o ./Debug/receive.c.o ./Debug/util.c.o ./Debug/command.c.o
+./Debug/main.c.o ./Debug/send.c.o ./Debug/util.c.o ./Debug/command.c.o ./Debug/inform_get_428.c.o ./Debug/inform_get_864.c.o ./Debug/neighbor.c.o

@@ -93,12 +93,13 @@
   <VirtualDirectory Name="src">
     <File Name="main.c"/>
     <File Name="meshclient.h"/>
-    <File Name="inform_get.c"/>
     <File Name="send.c"/>
-    <File Name="receive.c"/>
     <File Name="transmission.h"/>
     <File Name="util.c"/>
     <File Name="command.c"/>
+    <File Name="inform_get_428.c"/>
+    <File Name="inform_get_864.c"/>
+    <File Name="neighbor.c"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
   <Dependencies Name="Release"/>

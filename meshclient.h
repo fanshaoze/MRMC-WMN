@@ -16,7 +16,8 @@
 #define init_ssid_2G "Link0"
 #define init_channel_5G "36"
 #define init_ssid_5G "Link1"
-#define init_mode "ap"
+#define init_mode_864 "ap"
+#define init_mode_428 "11s"
 #define init_wds 1
 
 #define radio_max 20
@@ -29,8 +30,8 @@
 #define neicom0 "iw dev "
 #define neicom1 " station dump"
 
-#define hardware0 " WPQ864"
-#define hardware1 " WPJ428"
+#define hardware0 " WPJ428"
+#define hardware1 " WPQ864"
 
 #define command0 " iw"
 #define command1 " iwlist"
@@ -85,22 +86,32 @@ int get_nodeid();
 int decode_command(char recv_command[]);
 int alloc_config(struct radio_type radio);
 int alloc_config_all(struct radio_type * radios);
-int get_neighbor( float* loads,int clientSocket,struct radio_type * radios);
+int get_neighbor_864( float* loads,int clientSocket,struct radio_type * radios);
+int get_neighbor_428( float* loads,int clientSocket,struct radio_type * radios);
 int send_neighbor(int clientSocket, char * neigh_inform);
 int shutdown_net();
 int get_freq(char * wlan);
-char * get_nei_infor_iw(char * result, struct radio_type radio);
 char * get_nei_infor_iwlist(char * result, struct radio_type radio);
-float* getload(struct radio_type * radios);
+char * get_nei_infor_iw(char * result, struct radio_type radio);
+char * get_nei_infor_wlanconfig(char * result, struct radio_type radio);
+float* getload_428(struct radio_type * radios);
+float* getload_864(struct radio_type * radios);
 int get_config(struct radio_type * radios,char * recv_commmand);
 int radio_disable(struct radio_type radio);
 int radio_disable_all(struct radio_type * radios);
 int enable_all_radios(struct radio_type * radios);
-int radios_inform_init();
-void radios_inform_init2(struct radio_type * radios);
+int radios_inform_init_864();
+int radios_inform_init_428();
+void radios_inform_init2_864(struct radio_type * radios);
+void radios_inform_init2_428(struct radio_type * radios);
 
 char *strrpc(char *str,char *oldstr,char *newstr);
 void radio_init(struct radio_type * radios);
+int value_init(struct radio_type * radios);
+int getconfig();
 char * compose_neighbor(struct node_neighbor neighbor);
 int confirm_wireless();
 char * tok_forward(char* words, int index,char * signal);
+
+void radio_init_864(struct radio_type * radios);
+void radio_init_428(struct radio_type * radios);

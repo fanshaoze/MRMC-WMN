@@ -39,63 +39,28 @@ int main()
     //snprintf(hardware,20,"%s","WPQ864");
     //snprintf(neicommand,20,"%s","iwlist");
     
-    char filename[] = "/config"; 
-             //每行最大读取的字符数
-    char * words;
-    char StrLine[1024];    
-    FILE *fp;
-     if((fp = fopen(filename,"r")) == NULL) //判断文件是否存在及可读
-    {
-        printf("no config!");
-        return 0;
-    }
-    while (!feof(fp))
-    {
-
-    fgets(StrLine,1024,fp);  //读取一行
-	char str_tmp[1024];
-    snprintf(str_tmp,1024,"%s",StrLine);
-	strrpc(str_tmp,"\n","\0");
-    printf("Str %s %s\n",StrLine,str_tmp);
-	words = strtok(str_tmp,":");//按照空格划分一行的内容
-        printf("words %s\n",words);
-	if(strncmp(words, "Enable",6) == 0){
-        enable_time = atoi(tok_forward(words,1,":"));
-    }
-    else if(strncmp(words, "NeighborFind",12) == 0){
-        findnei_time = atoi(tok_forward(words,1,":"));
-    }
-    else if(strncmp(words, "ServerIp",8) == 0){
-        snprintf(ipaddr,20,"%s",tok_forward(words,1,":"));
-    }
-    else if(strncmp(words, "hardware",8) == 0){
-        snprintf(hardware,20,"%s",tok_forward(words,1,":"));
-    }
-    else if(strncmp(words, "neicommand",10) == 0){
-        snprintf(neicommand,20,"%s",tok_forward(words,1,":"));
-    }
-	else printf("wrong config");
-    }
+    getconfig();//
     printf("enble %d,findnei_time %d,ServerIp %s,hardware %s,neicommand %s\n,",enable_time,findnei_time,ipaddr,hardware,neicommand);
-
     snprintf(init_ssid,6,"%s","Link1");
-    radios_inform_init();
-	radios = (struct radio_type*) malloc(sizeof(struct radio_type)*radio_no);
-    int *disables = (int *)malloc(sizeof(int) * radio_no);
-    for (i = 0;i<radio_no;i++){
-        disables[i] = 0;
+    
+    if(strcmp(hardware,hardware0)==0){
+        radios_inform_init_428();
     }
-    for(i = 0;i<radio_no;i++){
-        snprintf(radios[i].radio_id,10,"%s","NULL");
-        snprintf(radios[i].mac_addr,50,"%s","NULL");
-        snprintf(radios[i].channel,10,"%s","NULL");
-        snprintf(radios[i].ssid,10,"%s","NULL");
-        radios[i].neigh_count = 0;
-        radios[i].freq = 0;
-        radios[i].disabled = 0;
-        radios[i].neighbors = NULL;
+    else if(strcmp(hardware,hardware1)==0){
+        radios_inform_init_864();
     }
-	radios_inform_init2(radios);
+    else return 0;
+    radios = (struct radio_type*) malloc(sizeof(struct radio_type)*radio_no);
+    value_init(radios);
+    
+    if(strcmp(hardware,hardware0)==0){
+        radios_inform_init2_428(radios);
+    }
+    else if(strcmp(hardware,hardware1)==0){
+        radios_inform_init2_864(radios);
+    }
+    else return 0;
+    
     alloc_config_all(radios);
     printf("sleep begin");
     confirm_wireless();
@@ -126,8 +91,14 @@ int main()
     printf("发送消息:");
     snprintf(sendbuf,strlen(sendbuf),"%s","send neighbor information\r\n");
     //scanf("%s", sendbuf);
+    if(strcmp(hardware,hardware0)==0){
+        get_neighbor_428( loads,clientSocket,radios);
+    }
+    else if(strcmp(hardware,hardware1)==0){
+        get_neighbor_864( loads,clientSocket,radios);
+    }
+    else return 0;
     
-    get_neighbor( loads,clientSocket,radios);
     
     
     int clientSocket1;
@@ -180,10 +151,7 @@ int main()
         //strcpy(recvbuf1,"DISCOVER");
         printf("%s\n", recvbuf1);
         snprintf(recvbuf2,strlen(recvbuf2),"%s",recvbuf1);
-        //recvbuf1[strlen("DISCOVER")] = '\0';
-        //printf("%s\n", recvbuf1);
-        //end
-        //解析命令，将命令和标识相对应，
+
         com_no = decode_command(recvbuf2);
         //char com_no = command_no();
         printf("com no %d,\n",com_no);
@@ -206,19 +174,30 @@ int main()
                 }
                 confirm_wireless();
                
-		 break;
+                break;
                 
             case 3:
-                loads = getload(radios);
-                radio_init(radios);
+                if(strcmp(hardware,hardware0)==0){
+                    loads = getload_428(radios);
+                    radio_init_428(radios);
+                }
+                else if(strcmp(hardware,hardware1)==0){
+                    loads = getload_864(radios);
+                    radio_init_864(radios);
+                }
                 alloc_config_all(radios);
                 confirm_wireless();
-                //wait!!! enough
-                get_neighbor(loads,clientSocket,radios);
+
+                if(strcmp(hardware,hardware0)==0){
+                    get_neighbor_428(loads,clientSocket,radios);
+                }
+                else if(strcmp(hardware,hardware1)==0){
+                    get_neighbor_864(loads,clientSocket,radios);
+                }
+                
                 printf("dicover is over,waiting for config");
-		//修改，发送！
-                //&&&&&get_neighbor(clientSocket,radios);
-		break;
+
+                break;
 				//printf("stop\n");
             default:
                 printf("command error\n");
