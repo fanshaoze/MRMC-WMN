@@ -12,15 +12,18 @@ char * get_nei_infor_iwlist(char * result, struct radio_type radio){
     sprintf(command,"%s%s%s%s%s","iwlist ",radio.radio_id," scanning > /tmp/",radio.radio_id,"scanning");
     char filename[100];
     
+
      system(command);
      sprintf(filename,"%s%s%s","/tmp/",radio.radio_id,"scanning");
      printf("get %s\n",filename);
-/*
-    if(strcmp(radio.radio_id,"wlan0") == 0)
-        strcpy(filename,"/home/fan/codelite/mesh-client/dump"); //文件名
-    if(strcmp(radio.radio_id,"wlan1") == 0)
-        strcpy(filename,"/home/fan/codelite/mesh-client/dump"); //文件名
-    filename[strlen("/home/fan/codelite/mesh-client/dump")] = '\0';
+     
+
+    /*
+    if(strcmp(radio.radio_id,"ath0") == 0)
+        strcpy(filename,"/home/fan/codelite/mesh-client/ath0scanning"); //文件名
+    if(strcmp(radio.radio_id,"ath1") == 0)
+        strcpy(filename,"/home/fan/codelite/mesh-client/ath1scanning"); //文件名
+    filename[strlen("/home/fan/codelite/mesh-client/ath0scanning")] = '\0';
     */
     FILE *fp;
     char *words;

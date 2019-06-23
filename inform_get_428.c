@@ -50,6 +50,7 @@ int radios_inform_init_428(){
         char word[20];
         snprintf(word,20,"%s",words);
         snprintf(wl,4,"%s",word);
+        printf("wl %s\n",wl);
         wl[4] = '\0';
         if (strcmp(wl, "wlan") == 0){
             snprintf(radios_id[j],strlen(words)+1,"%s",words);

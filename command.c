@@ -7,8 +7,9 @@
 int decode_command(char recv_command[]){
     
     char * words = NULL;
+    printf("recv_ %s\n",recv_command);
     words = strtok(recv_command," ");
-    printf("deconde %s\n",words);
+    printf("decode %s\n",words);
     if(strcmp(words,"SHUTDOWN") == 0){
         return 1;
     }
@@ -18,6 +19,9 @@ int decode_command(char recv_command[]){
     else if(strcmp(words,"DISCOVER") == 0){
         return 3;
     }
+    else if(strcmp(words,"LOADBALANCE") == 0){
+        return 4;
+     }
     return 0;
 }
 

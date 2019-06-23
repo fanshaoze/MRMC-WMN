@@ -30,11 +30,11 @@
 #define neicom0 "iw dev "
 #define neicom1 " station dump"
 
-#define hardware0 " WPJ428"
-#define hardware1 " WPQ864"
+#define hardware0 "WPJ428"
+#define hardware1 "WPQ864"
 
-#define command0 " iw"
-#define command1 " iwlist"
+#define command0 "iw"
+#define command1 "iwlist"
 
 #define sendport 10001
 #define receiveport 10002
@@ -100,6 +100,7 @@ int get_config(struct radio_type * radios,char * recv_commmand);
 int radio_disable(struct radio_type radio);
 int radio_disable_all(struct radio_type * radios);
 int enable_all_radios(struct radio_type * radios);
+int send_load( float* loads,int clientSocket,struct radio_type * radios);
 int radios_inform_init_864();
 int radios_inform_init_428();
 void radios_inform_init2_864(struct radio_type * radios);

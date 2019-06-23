@@ -46,6 +46,7 @@ int confirm_wireless(){
     system("uci commit wireless");
     system("/etc/init.d/network restart");
     sleep(enable_time);
+    printf("confirm over\n");
     return 0;
 }
 
@@ -287,6 +288,9 @@ char * tok_forward(char* words, int index,char * signal){
 
 int getconfig(){
       char filename[] = "/config"; 
+      
+      //char filename[] = "/home/fan/codelite/mesh-client/config"; 
+      
              //每行最大读取的字符数
     char * words;
     char StrLine[1024];    
@@ -342,18 +346,20 @@ int get_freq(char * wlan){
     char command[100];
     sprintf(command,"%s%s%s%s%s","iwlist ",wlan," channel > /tmp/",wlan,"freq");
     char filename[100];
-    
+
     system(command);
     sprintf(filename,"%s%s%s","/tmp/",wlan,"freq");
-    printf("freq %s\n",filename);
+
+
     /*
-    if(strcmp(wlan,"wlan0" )== 0){
-        strcpy(filename, "/home/fan/codelite/mesh-client/iwlistwlan0"); //文件名
+    if(strcmp(wlan,"ath0" )== 0){
+        strcpy(filename, "/home/fan/codelite/mesh-client/iwlistath0"); //文件名
     }
-    if(strcmp(wlan,"wlan1") == 0){
-        strcpy(filename, "/home/fan/codelite/mesh-client/iwlistwlan1"); //文件名
+    if(strcmp(wlan,"ath1") == 0){
+        strcpy(filename, "/home/fan/codelite/mesh-client/iwlistath1"); //文件名
     }
-    */
+     */
+    printf("freq %s\n",filename);
     FILE *fp;
     char * words;
     char channel_number[3];
@@ -363,7 +369,7 @@ int get_freq(char * wlan){
               //每行最大读取的字符数
     if((fp = fopen(filename,"r")) == NULL) //判断文件是否存在及可读
     {
-        printf("error!");
+        printf("error! freq");
         return -1;
     }
     if (!feof(fp)) {
@@ -388,5 +394,54 @@ int get_freq(char * wlan){
     }
     if(fclose(fp)) printf("file close error!\n");
     fp = NULL;
+    return 0;
+}
+
+int send_load( float* loads,int clientSocket,struct radio_type * radios){
+    //使能所有的射频
+    FILE* fp = NULL; // 文件指针
+	//char* szAppendStr = "Text";
+	//errno_t eResult;
+    //if((fp = fopen("/home/fan/codelite/mesh-client/temp","w+")) == NULL) //判断文件是否存在及可读
+    if((fp = fopen("/tmp/temp","w+")) == NULL) //判断文件是否存在及可读
+    {
+        printf("error! temp");
+        return 0;
+    }
+    printf("temp");
+    //enable_all_radios(radios);
+    char load_send_inform[1000];
+    char load_tmp[20];
+    int i = 0;
+    for(i = 0;i<radio_no;i++){
+        load_send_inform[0] = '\0';
+        radios[i].load = loads[i];
+
+
+        
+		strcat(load_send_inform,"LOAD ");
+
+        strcat(load_send_inform,node_id);
+       
+
+        strcat(load_send_inform," ");
+        strcat(load_send_inform,radios[i].mac_addr);
+        
+        
+        strcat(load_send_inform," ");
+        snprintf(load_tmp,20,"%f",radios[i].load);
+        strcat(load_send_inform,load_tmp);
+        
+        
+        strcat(load_send_inform, "\r\n");
+      
+        
+        //fputs("~~~~",fp);
+        printf("load_send_inform:\n%s\n",load_send_inform);
+        fputs(load_send_inform, fp);
+        send(clientSocket, load_send_inform, strlen(load_send_inform), 0);
+        
+    }
+	fclose(fp);
     return 0;
 }
